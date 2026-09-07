@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>UNITY SPACE — Atlas Celestial 72 Mundos</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Background Effects -->
+  <div id="space">
+    <div id="stars"></div>
+    <div id="nebula"></div>
+  </div>
+
+  <!-- Header -->
+  <div id="header">
+    <h1>UNITY SPACE</h1>
+    <span>ATLAS CELESTIAL · 72 MUNDOS</span>
+  </div>
+
+  <!-- Tools / Search -->
+  <div id="toolbar">
+    <input type="text" id="search" placeholder="Buscar planeta, galáxia ou tipo..." autocomplete="off">
+    <button class="toolbtn" id="home">⌂ Visão Geral</button>
+    <button class="toolbtn" id="zoomOut">−</button>
+    <button class="toolbtn" id="zoomIn">+</button>
+    <button class="toolbtn bounty-btn" id="btn-alvos" style="border-color:#ff5e00; color:#ff5e00; margin-left: 15px; text-shadow: 0 0 5px #ff5e00;">[ ALVOS PROCURADOS ]</button>
+  </div>
+
+  <!-- Map Viewport -->
+  <div id="viewport">
+    <div id="world">
+      <svg id="map" viewBox="0 0 2600 1600"></svg>
+    </div>
+  </div>
+
+  <!-- Galaxy / Cluster HUD -->
+  <div id="galaxyInfo">
+    <h3 id="giTitle">Unity Space</h3>
+    <p id="giText">Uma rede de seis grandes galáxias conectadas. Navegue pelas rotas interestelares e clique em qualquer mundo.</p>
+  </div>
+
+  <!-- Hints -->
+  <div id="hint">ARRASTE PARA NAVEGAR · ROLAGEM PARA ZOOM · CLIQUE PARA EXPLORAR</div>
+
+  <!-- Planet Info Panel -->
+  <aside id="infoPanel">
+    <button id="closePanel">×</button>
+    <div class="eyebrow" id="pCode">REGISTRO --</div>
+    <h2 id="pName">Planeta</h2>
+    <div id="pImageContainer" style="display:none; margin: 15px 0;">
+      <img id="pImage" src="" alt="Planet Image" style="width:100%; aspect-ratio: 1/1; object-fit: cover; border-radius: 8px; border: 1px solid #444;">
+    </div>
+    <div class="sub" id="pGalaxy">Galáxia · Tipo</div>
+    
+    <div id="pStats"></div>
+    
+    <div class="description" id="pDesc">Descrição do mundo.</div>
+    <div id="pTags"></div>
+  </aside>
+
+  <!-- BOUNTY BOARD MODAL -->
+  <div id="bounty-modal" class="bounty-modal hidden">
+    <div class="bounty-overlay"></div>
+    <div class="bounty-content">
+      <div class="bounty-header">
+        <h2>NOVA CORPS // REGISTRO DE ALVOS</h2>
+        <button id="close-bounty" class="hud-btn" style="border-color:#ff5e00; color:#ff5e00; background:transparent; padding: 5px 10px; cursor: pointer;">FECHAR [X]</button>
+      </div>
+      <div class="bounty-grid" id="bounty-grid">
+        <!-- Renderizado dinamicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- BOUNTY DETAIL MODAL -->
+  <div id="bounty-detail-modal" class="bounty-modal hidden" style="z-index: 150;">
+    <div class="bounty-overlay" id="close-bounty-detail-overlay"></div>
+    <div class="bounty-content" style="max-width: 1200px; width: 90vw; height: 85vh; display: flex; flex-direction: column;">
+      <div class="bounty-header">
+        <h2 id="bd-name">NOME</h2>
+        <button id="close-bounty-detail" class="hud-btn" style="border-color:#ff5e00; color:#ff5e00; background:transparent; padding: 5px 10px; cursor: pointer;">FECHAR [X]</button>
+      </div>
+      <div style="padding: 40px; display: flex; gap: 40px; overflow-y: auto; flex: 1; flex-wrap: wrap;">
+        <div style="flex: 1.2; min-width: 400px; position: relative;" class="card-image-container">
+          <img id="bd-image" src="" style="width: 100%; height: 100%; object-fit: cover; border: 1px solid #ff5e00; border-radius: 4px; filter: contrast(1.2) brightness(1.1); display: block;">
+          <div style="position: absolute; inset: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; pointer-events: none;"></div>
+        </div>
+        <div style="flex: 1; min-width: 350px; color: #fff;">
+          <h4 style="color:#ff5e00; margin: 0 0 5px 0; font-size: 12px; letter-spacing: 2px;">VISTO POR ÚLTIMO</h4>
+          <p id="bd-lastseen" style="margin: 0 0 20px 0; font-weight: bold; font-size: 15px;"></p>
+          
+          <h4 style="color:#ff5e00; margin: 0 0 5px 0; font-size: 12px; letter-spacing: 2px;">PODER</h4>
+          <p id="bd-power" style="color: #ffb703; font-family: var(--font-display); margin: 0 0 20px 0; font-size: 16px; text-shadow: 0 0 5px rgba(255,183,3,0.5);"></p>
+
+          <h4 style="color:#ff5e00; margin: 0 0 5px 0; font-size: 12px; letter-spacing: 2px;">APARÊNCIA</h4>
+          <p id="bd-appearance" style="margin: 0 0 20px 0; font-size: 14px;"></p>
+
+          <h4 style="color:#ff5e00; margin: 0 0 5px 0; font-size: 12px; letter-spacing: 2px;">PERSONALIDADE</h4>
+          <p id="bd-personality" style="margin: 0 0 20px 0; font-size: 14px;"></p>
+
+          <h4 style="color:#ff5e00; margin: 0 0 5px 0; font-size: 12px; letter-spacing: 2px;">DESCRIÇÃO COMPLEMENTAR</h4>
+          <p id="bd-desc" style="white-space: pre-wrap; font-size: 14px; color: #ccc; margin: 0; line-height: 1.5;"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div id="legend">
+    <div class="legend-title">CLASSIFICAÇÃO DE MUNDOS</div>
+    <div class="legend-row"><span class="dot" style="background:#58cfff;box-shadow:0 0 8px #58cfff"></span> Habitável</div>
+    <div class="legend-row"><span class="dot" style="background:#ff706a;box-shadow:0 0 8px #ff706a"></span> Hostil</div>
+    <div class="legend-row"><span class="dot" style="background:#a783ff;box-shadow:0 0 8px #a783ff"></span> Arcano</div>
+    <div class="legend-row"><span class="dot" style="background:#55e7a0;box-shadow:0 0 8px #55e7a0"></span> Tecnológico</div>
+    <div class="legend-row"><span class="dot" style="background:#c4a36b;box-shadow:0 0 8px #c4a36b"></span> Ruína</div>
+  </div>
+
+  <div id="status">72 / 72 mundos catalogados</div>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atlas do Unity Space — 72 Mundos</title>
+<style>
+:root{
+  --bg:#05070d; --panel:rgba(10,14,25,.92); --line:rgba(255,255,255,.13);
+  --text:#f4f7ff; --muted:#9aa7bf; --accent:#70d7ff;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+body{user-select:none}
+button,input{font:inherit}
+#app{position:relative;width:100%;height:100%;overflow:hidden}
+#space{
+  position:absolute;inset:0;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(35,55,95,.20),transparent 35%),
+    radial-gradient(circle at 20% 20%,rgba(70,40,130,.10),transparent 25%),
+    #05070d;
+}
+#stars{position:absolute;inset:-10%;background-image:
+ radial-gradient(1px 1px at 10% 20%,#fff,transparent),
+ radial-gradient(1px 1px at 30% 80%,#fff,transparent),
+ radial-gradient(1px 1px at 72% 17%,#fff,transparent),
+ radial-gradient(1px 1px at 90% 72%,#fff,transparent),
+ radial-gradient(1px 1px at 53% 61%,#fff,transparent),
+ radial-gradient(1px 1px at 84% 35%,#fff,transparent),
+ radial-gradient(1px 1px at 15% 65%,#fff,transparent),
+ radial-gradient(1px 1px at 45% 8%,#fff,transparent),
+ radial-gradient(1px 1px at 66% 88%,#fff,transparent);
+ background-size:220px 180px;opacity:.45}
+#viewport{position:absolute;inset:0;cursor:grab}
+#viewport.dragging{cursor:grabbing}
+#map{position:absolute;left:0;top:0;width:1600px;height:1000px;transform-origin:0 0}
+svg{width:100%;height:100%;overflow:visible}
+.connection{fill:none;stroke:#dce9ff;stroke-width:2.4;opacity:.23;vector-effect:non-scaling-stroke;pointer-events:none}
+.connection.main{stroke-width:3;opacity:.34}
+.cluster{
+  fill-opacity:.15;stroke-width:2.5;vector-effect:non-scaling-stroke;
+  transition:.2s;cursor:pointer
+}
+.cluster:hover{fill-opacity:.23;stroke-width:3}
+.cluster-label{font-size:25px;letter-spacing:4px;font-weight:700;fill:#eef5ff;opacity:.92;pointer-events:none}
+.cluster-sub{font-size:12px;letter-spacing:2px;fill:#aebbd0;pointer-events:none}
+.planet{cursor:pointer;transition:filter .15s}
+.planet:hover{filter:brightness(1.45) drop-shadow(0 0 10px rgba(130,220,255,.7))}
+.planet circle.core{stroke:rgba(255,255,255,.55);stroke-width:1.5;vector-effect:non-scaling-stroke}
+.planet circle.ring{fill:none;stroke:rgba(255,255,255,.3);stroke-width:1;vector-effect:non-scaling-stroke}
+.planet text{font-size:12px;fill:#edf3ff;paint-order:stroke;stroke:#05070d;stroke-width:4px;stroke-linejoin:round;pointer-events:none}
+.planet.selected circle.core{stroke:#fff;stroke-width:3}
+.planet.selected{filter:drop-shadow(0 0 12px var(--accent))}
+#title{
+ position:absolute;left:32px;top:25px;z-index:5;pointer-events:none;
+ font-size:34px;font-weight:800;letter-spacing:2px
+}
+#title small{display:block;font-size:11px;letter-spacing:4px;color:#7e8ba3;margin-top:3px}
+#toolbar{
+ position:absolute;right:22px;top:20px;z-index:10;display:flex;gap:8px;align-items:center;
+ background:rgba(7,10,18,.72);border:1px solid var(--line);backdrop-filter:blur(12px);
+ padding:8px;border-radius:14px
+}
+#search{width:230px;background:#0b1020;border:1px solid var(--line);color:white;padding:9px 12px;border-radius:9px;outline:none}
+#search:focus{border-color:#5dcfff}
+.toolbtn{
+ background:#11182a;border:1px solid var(--line);color:#dfe8f7;border-radius:9px;
+ padding:9px 11px;cursor:pointer
+}
+.toolbtn:hover{background:#18233b}
+#legend{
+ position:absolute;left:22px;bottom:20px;z-index:8;background:var(--panel);
+ border:1px solid var(--line);border-radius:14px;padding:13px 15px;backdrop-filter:blur(12px);
+ min-width:205px
+}
+.legend-title{font-size:11px;letter-spacing:2px;color:#8190aa;margin-bottom:9px}
+.legend-row{display:flex;align-items:center;gap:8px;font-size:12px;margin:6px 0;color:#cbd5e6}
+.dot{width:9px;height:9px;border-radius:50%;box-shadow:0 0 7px currentColor}
+#status{
+ position:absolute;right:22px;bottom:20px;z-index:8;color:#8492aa;font-size:11px;
+ background:rgba(7,10,18,.68);border:1px solid var(--line);border-radius:10px;padding:8px 11px
+}
+#panel{
+ position:absolute;right:20px;top:84px;bottom:74px;width:335px;z-index:20;
+ background:var(--panel);border:1px solid var(--line);border-radius:18px;
+ backdrop-filter:blur(18px);box-shadow:0 18px 60px rgba(0,0,0,.45);
+ padding:22px;transform:translateX(115%);transition:transform .25s ease;overflow:auto
+}
+#panel.open{transform:translateX(0)}
+#close{position:absolute;right:13px;top:12px;border:0;background:transparent;color:#8e9ab0;font-size:23px;cursor:pointer}
+.eyebrow{font-size:10px;letter-spacing:2px;color:#7890aa;text-transform:uppercase}
+#panel h2{font-size:28px;margin:7px 0 3px}
+#panel .galaxy{color:#8ea1bc;font-size:13px;margin-bottom:20px}
+.stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:13px}
+.stat b{color:#eaf1fb;font-weight:600}
+.description{font-size:13px;line-height:1.65;color:#b8c3d5;margin-top:18px}
+.tag{display:inline-block;margin:14px 5px 0 0;padding:5px 8px;border-radius:20px;background:rgba(255,255,255,.06);font-size:10px;color:#bac7da}
+#clusterPanel{
+ position:absolute;left:22px;top:95px;z-index:9;width:270px;background:var(--panel);
+ border:1px solid var(--line);border-radius:15px;padding:15px;backdrop-filter:blur(15px);
+ transition:.2s;opacity:0;transform:translateY(-8px);pointer-events:none
+}
+#clusterPanel.show{opacity:1;transform:none;pointer-events:auto}
+#clusterPanel h3{margin:0 0 5px;font-size:18px}
+#clusterPanel p{margin:0;color:#9ba9bd;font-size:12px;line-height:1.5}
+#clusterPanel .count{margin-top:10px;color:#dfe9f8;font-size:11px}
+#help{
+ position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:7;
+ color:#65738a;font-size:10px;letter-spacing:.5px;pointer-events:none
+}
+@media(max-width:700px){
+ #title{left:16px;top:16px;font-size:23px}
+ #toolbar{left:15px;right:15px;top:58px}
+ #search{width:100%}
+ #panel{left:12px;right:12px;width:auto;top:110px;bottom:65px}
+ #legend{display:none}
+ #clusterPanel{left:12px;top:110px}
+}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="space"><div id="stars"></div><div id="viewport"><div id="map"><svg id="svg" viewBox="0 0 1600 1000"></svg></div></div></div>
+
+  <div id="title">UNITY SPACE<small>ATLAS CELESTIAL · 72 MUNDOS</small></div>
+
+  <div id="toolbar">
+    <input id="search" placeholder="Buscar planeta, galáxia ou tipo..." autocomplete="off">
+    <button class="toolbtn" id="reset">⌂ Visão geral</button>
+    <button class="toolbtn" id="zoomOut">−</button>
+    <button class="toolbtn" id="zoomIn">+</button>
+  </div>
+
+  <div id="clusterPanel">
+    <h3 id="cpName"></h3><p id="cpDesc"></p><div class="count" id="cpCount"></div>
+  </div>
+
+  <aside id="panel">
+    <button id="close">×</button>
+    <div class="eyebrow" id="pCode"></div>
+    <h2 id="pName"></h2>
+    <div class="galaxy" id="pGalaxy"></div>
+    <div id="pStats"></div>
+    <div class="description" id="pDesc"></div>
+    <div id="pTags"></div>
+  </aside>
+
+  <div id="legend">
+    <div class="legend-title">TIPOS DE MUNDO</div>
+    <div class="legend-row"><span class="dot" style="color:#6bdcff;background:#6bdcff"></span> Habitável</div>
+    <div class="legend-row"><span class="dot" style="color:#b991ff;background:#b991ff"></span> Arcano</div>
+    <div class="legend-row"><span class="dot" style="color:#ff766e;background:#ff766e"></span> Hostil</div>
+    <div class="legend-row"><span class="dot" style="color:#69e6a5;background:#69e6a5"></span> Tecnológico</div>
+    <div class="legend-row"><span class="dot" style="color:#c7a36a;background:#c7a36a"></span> Ruína</div>
+  </div>
+  <div id="status">72 / 72 planetas catalogados</div>
+  <div id="help">ARRASTE PARA NAVEGAR · RODA DO MOUSE PARA ZOOM · CLIQUE EM UM MUNDO PARA EXPLORAR</div>
+</div>
+
+<script>
+const NS="http://www.w3.org/2000/svg";
+const svg=document.getElementById("svg");
+const map=document.getElementById("map");
+const viewport=document.getElementById("viewport");
+const panel=document.getElementById("panel");
+const clusterPanel=document.getElementById("clusterPanel");
+
+const galaxies=[
+ {code:"AU",name:"AURELIA",color:"#58cfff",desc:"A região mais estável do Unity Space: mundos férteis, antigas civilizações e grandes rotas comerciais.",x:350,y:310},
+ {code:"VH",name:"VHAROS",color:"#ff706a",desc:"Uma galáxia moldada por impérios, conflitos e planetas onde sobreviver já é uma forma de poder.",x:1250,y:245},
+ {code:"NY",name:"NYMÉRIA",color:"#a783ff",desc:"Fenômenos arcanos e anomalias tornam as leis da realidade pouco confiáveis.",x:790,y:340},
+ {code:"DR",name:"DRAKARYS",color:"#ff9b59",desc:"A fronteira selvagem: monstros colossais, climas extremos e ecossistemas imprevisíveis.",x:1210,y:700},
+ {code:"EL",name:"ELYSIUM",color:"#55e7a0",desc:"Megacidades, inteligências artificiais e tecnologias que ultrapassam os limites da vida orgânica.",x:470,y:745},
+ {code:"NI",name:"NIHILUS",color:"#c4a36b",desc:"A Galáxia Morta. Ruínas, mundos abandonados e vestígios de uma civilização que ninguém consegue explicar.",x:825,y:805}
+];
+
+const names={
+ AU:["Aureon","Verdantis","Maréa","Solara","Eldoria","Lunaris","Caelum","Arboris","Nivara","Pelagos","Terranis","Genesis"],
+ VH:["Kragor","Valthera","Mordrakk","Aresia","Ragnar","Dread","Ferrum","Sangria","Valkyr","Obsidia","Kharon","Imperion"],
+ NY:["Arcana","Mirage","Astralis","Etherea","Somnia","Chronos","Abyssia","Mystara","Noctis","Seraphis","Paradoxia","Origin"],
+ DR:["Drakon","Titania","Venom","Inferna","Glacius","Feral","Leviathan","Gorgona","Ashen","Ravager","Colossus","Behemoth"],
+ EL:["Elysium Prime","Neon","Cyberia","Mechanus","Synapse","Vega","Quantum","Nexus","Chrome","Datara","Omega","Singularity"],
+ NI:["Mortis","Ruina","Nox","Hades","Void","Sepulchra","Erebus","Lost","Cenotaph","Null","End","Nihilus"]
+};
+const types={AU:"Habitável",VH:"Hostil",NY:"Arcano",DR:"Hostil",EL:"Tecnológico",NI:"Ruína"};
+const descriptions={
+ "Aureon":"Capital de Aurelia e um dos maiores centros diplomáticos do universo. Suas cidades foram construídas sobre antigas ruínas pré-humanas.",
+ "Verdantis":"Um mundo-floresta onde as copas das árvores alcançam dezenas de quilômetros de altura. Pequenas civilizações vivem entre suas raízes.",
+ "Maréa":"Mais de 90% da superfície é oceano. Arquipélagos artificiais servem como portos para navegadores e comerciantes.",
+ "Solara":"Desertos dourados e cidades movidas por gigantescos coletores solares. A noite revela duas luas habitáveis.",
+ "Eldoria":"Reinos antigos, cavaleiros e tecnologia perdida coexistem em uma sociedade que ainda chama suas naves de 'dragões de ferro'.",
+ "Lunaris":"Um planeta marcado por crateras e uma rotação extremamente lenta. A fronteira entre dia e noite é um dos maiores espetáculos do setor.",
+ "Caelum":"Continentes flutuam em uma atmosfera densa. As cidades são conectadas por pontes aéreas e portais de transporte.",
+ "Arboris":"Uma biosfera quase completamente vertical. Viajar pelo planeta significa subir, descer e atravessar florestas suspensas.",
+ "Nivara":"Mundo congelado, porém habitável sob sua crosta. Oceanos subterrâneos abrigam uma fauna bioluminescente.",
+ "Pelagos":"Arquipélagos, tempestades tropicais e uma cultura de piratas espaciais fazem deste mundo uma rota difícil de controlar.",
+ "Terranis":"Um planeta industrial cuja população vive em cidades-fábrica. A economia depende das minas profundas.",
+ "Genesis":"Um dos mundos mais antigos catalogados. Muitos pesquisadores acreditam que sua superfície guarda a origem de uma civilização desaparecida.",
+ "Imperion":"Sede do maior império conhecido. Sua capital orbital é visível a olho nu de quase todo o planeta.",
+ "Origin":"As anomalias arcanas de Nyméria parecem convergir para este mundo. Nenhuma expedição conseguiu mapear completamente sua superfície.",
+ "Chronos":"O tempo não flui na mesma velocidade em toda a superfície. Algumas regiões envelhecem anos enquanto outras permanecem praticamente intactas.",
+ "Paradoxia":"As leis físicas mudam de acordo com a localização. Equipamentos de navegação convencionais são inúteis aqui.",
+ "Behemoth":"Uma criatura colossal atravessa lentamente o interior do planeta. Durante séculos, seus movimentos foram confundidos com atividade tectônica.",
+ "Singularity":"Uma inteligência artificial alcançou um estado de consciência que transcende sua infraestrutura original. Ninguém sabe se ela ainda considera os orgânicos aliados.",
+ "Nihilus":"O centro do maior mistério do Unity Space. Ruínas sugerem que este planeta foi construído, não formado naturalmente."
+};
+
+function hash(i){return Math.abs(Math.sin(i*91.73)*43758.5453)%1}
+function planetDesc(g,i,name){
+ return descriptions[name] || `${name} é um mundo de ${types[g.code].toLowerCase()} localizado no setor ${g.name}. Seu registro ainda contém regiões inexploradas e fenômenos que desafiam os mapas oficiais.`;
+}
+
+const planets=[];
+let global=0;
+galaxies.forEach((g,gi)=>{
+ for(let i=0;i<12;i++){
+   const a=(i/12)*Math.PI*2 + gi*.37;
+   const r=72 + (i%3)*35 + hash(global+2)*22;
+   const px=g.x+Math.cos(a)*r*1.55;
+   const py=g.y+Math.sin(a)*r*.95;
+   const size=7+(i%4)*2;
+   planets.push({
+     id:++global, code:`${g.code}-${String(i+1).padStart(2,"0")}`, name:names[g.code][i],
+     galaxy:g, type:types[g.code], x:px,y:py,size,
+     desc:planetDesc(g,i,names[g.code][i]),
+     population:["Baixa","Média","Alta","Muito alta"][i%4],
+     climate:["Temperado","Árido","Oceânico","Gélido","Instável"][i%5]
+   });
+ }
+});
+
+// --- defs / stars / clusters ---
+const defs=document.createElementNS(NS,"defs");
+svg.appendChild(defs);
+function addGradient(id, c){
+ const grad=document.createElementNS(NS,"radialGradient");grad.id=id;
+ [["0%", "#ffffff"],["35%",c],["100%","#05070d"]].forEach(([o,col])=>{
+   const s=document.createElementNS(NS,"stop");s.setAttribute("offset",o);s.setAttribute("stop-color",col);s.setAttribute("stop-opacity",o==="0%"?.95:1);grad.appendChild(s)
+ });
+ defs.appendChild(grad);
+}
+galaxies.forEach((g,i)=>addGradient("grad"+i,g.color));
+
+const bgStars=document.createElementNS(NS,"g"); svg.appendChild(bgStars);
+for(let i=0;i<240;i++){
+ const c=document.createElementNS(NS,"circle");
+ c.setAttribute("cx",(hash(i*3)*1600).toFixed(1)); c.setAttribute("cy",(hash(i*3+1)*1000).toFixed(1));
+ c.setAttribute("r",hash(i*3+2)*1.3+.25); c.setAttribute("fill","#dce9ff"); c.setAttribute("opacity",.15+hash(i*3+3)*.55);
+ bgStars.appendChild(c);
+}
+
+const clusterG=document.createElementNS(NS,"g");svg.appendChild(clusterG);
+galaxies.forEach(g=>{
+ const c=document.createElementNS(NS,"circle");c.classList.add("cluster");
+ c.setAttribute("cx",g.x);c.setAttribute("cy",g.y);c.setAttribute("r",190);
+ c.setAttribute("fill",g.color);c.setAttribute("stroke",g.color);
+ c.addEventListener("click",e=>{e.stopPropagation();showCluster(g);focus(g.x,g.y,.88)});
+ clusterG.appendChild(c);
+ const t=document.createElementNS(NS,"text");t.classList.add("cluster-label");t.setAttribute("x",g.x);t.setAttribute("y",g.y-160);t.setAttribute("text-anchor","middle");t.textContent=g.name;clusterG.appendChild(t);
+ const s=document.createElementNS(NS,"text");s.classList.add("cluster-sub");s.setAttribute("x",g.x);s.setAttribute("y",g.y-140);s.setAttribute("text-anchor","middle");s.textContent="12 MUNDOS";clusterG.appendChild(s);
+});
+
+// --- connections: local rings + cross-galaxy routes ---
+const lines=document.createElementNS(NS,"g");svg.appendChild(lines);
+galaxies.forEach((g,gi)=>{
+ const ps=planets.filter(p=>p.galaxy===g);
+ ps.forEach((p,i)=>{
+   const q=ps[(i+1)%ps.length];
+   const line=document.createElementNS(NS,"path");line.classList.add("connection");
+   const mx=(p.x+q.x)/2,my=(p.y+q.y)/2;
+   line.setAttribute("d",`M ${p.x} ${p.y} Q ${mx+(hash(i+gi)*25-12)} ${my+(hash(i+gi+7)*25-12)} ${q.x} ${q.y}`);
+   lines.appendChild(line);
+ });
+});
+for(let i=0;i<12;i++){
+ const ps=galaxies.map(g=>planets.find(p=>p.galaxy===g && p.code.endsWith(String(i+1).padStart(2,"0"))));
+ for(let j=0;j<ps.length-1;j++){
+   const a=ps[j],b=ps[j+1];
+   const line=document.createElementNS(NS,"path");line.classList.add("connection","main");
+   const mx=(a.x+b.x)/2,my=(a.y+b.y)/2;
+   line.setAttribute("d",`M ${a.x} ${a.y} Q ${mx} ${my-35*Math.sin(i+1)} ${b.x} ${b.y}`);
+   lines.appendChild(line);
+ }
+}
+
+// --- planets ---
+const planetG=document.createElementNS(NS,"g");svg.appendChild(planetG);
+planets.forEach((p,idx)=>{
+ const g=document.createElementNS(NS,"g");g.classList.add("planet");g.dataset.id=p.id;
+ const ring=document.createElementNS(NS,"circle");ring.classList.add("ring");ring.setAttribute("cx",p.x);ring.setAttribute("cy",p.y);ring.setAttribute("r",p.size+4);
+ const core=document.createElementNS(NS,"circle");core.classList.add("core");
+ core.setAttribute("cx",p.x);core.setAttribute("cy",p.y);core.setAttribute("r",p.size);
+ core.setAttribute("fill",`url(#grad${galaxies.indexOf(p.galaxy)})`);
+ const text=document.createElementNS(NS,"text");text.setAttribute("x",p.x+p.size+7);text.setAttribute("y",p.y+4);text.textContent=p.name;
+ g.append(ring,core,text);
+ g.addEventListener("click",e=>{e.stopPropagation();showPlanet(p)});
+ planetG.appendChild(g);
+ p.el=g;
+});
+
+function showPlanet(p){
+ document.querySelectorAll(".planet.selected").forEach(x=>x.classList.remove("selected"));
+ p.el.classList.add("selected");
+ document.getElementById("pCode").textContent=`REGISTRO ${p.code} · MUNDO ${p.id}/72`;
+ document.getElementById("pName").textContent=p.name;
+ document.getElementById("pGalaxy").textContent=`${p.galaxy.name} · ${p.type}`;
+ document.getElementById("pStats").innerHTML=
+   `<div class="stat"><span>População</span><b>${p.population}</b></div>
+    <div class="stat"><span>Clima</span><b>${p.climate}</b></div>
+    <div class="stat"><span>Coordenadas</span><b>${Math.round(p.x)} : ${Math.round(p.y)}</b></div>
+    <div class="stat"><span>Classificação</span><b>${p.type}</b></div>`;
+ document.getElementById("pDesc").textContent=p.desc;
+ document.getElementById("pTags").innerHTML=
+   `<span class="tag">${p.galaxy.name}</span><span class="tag">${p.type}</span><span class="tag">Arquivo ${String(p.id).padStart(2,"0")}</span>`;
+ panel.classList.add("open"); clusterPanel.classList.remove("show");
+}
+function showCluster(g){
+ document.getElementById("cpName").textContent=g.name;
+ document.getElementById("cpDesc").textContent=g.desc;
+ document.getElementById("cpCount").textContent="12 planetas · setores conectados";
+ clusterPanel.classList.add("show");
+ panel.classList.remove("open");
+}
+document.getElementById("close").onclick=()=>panel.classList.remove("open");
+
+let scale=.78, tx=0, ty=0, dragging=false, sx=0,sy=0,stx=0,sty=0;
+function apply(){map.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`}
+function focus(x,y,targetScale=1){
+ scale=targetScale; tx=window.innerWidth/2-x*scale; ty=window.innerHeight/2-y*scale; apply()
+}
+document.getElementById("reset").onclick=()=>{scale=.78;tx=(innerWidth-1600*scale)/2;ty=(innerHeight-1000*scale)/2;apply();clusterPanel.classList.remove("show");panel.classList.remove("open");document.querySelectorAll(".planet.selected").forEach(x=>x.classList.remove("selected"))}
+document.getElementById("zoomIn").onclick=()=>{scale=Math.min(2.2,scale*1.18);apply()}
+document.getElementById("zoomOut").onclick=()=>{scale=Math.max(.35,scale/1.18);apply()}
+viewport.addEventListener("wheel",e=>{
+ e.preventDefault();
+ const rect=viewport.getBoundingClientRect(), mx=e.clientX-rect.left,my=e.clientY-rect.top;
+ const old=scale, factor=e.deltaY<0?1.12:.89, next=Math.max(.35,Math.min(2.2,old*factor));
+ tx=mx-(mx-tx)*(next/old); ty=my-(my-ty)*(next/old); scale=next;apply();
+},{passive:false});
+viewport.addEventListener("pointerdown",e=>{dragging=true;viewport.classList.add("dragging");sx=e.clientX;sy=e.clientY;stx=tx;sty=ty;viewport.setPointerCapture(e.pointerId)});
+viewport.addEventListener("pointermove",e=>{if(!dragging)return;tx=stx+e.clientX-sx;ty=sty+e.clientY-sy;apply()});
+viewport.addEventListener("pointerup",()=>{dragging=false;viewport.classList.remove("dragging")});
+svg.addEventListener("click",()=>{clusterPanel.classList.remove("show")});
+
+const search=document.getElementById("search");
+search.addEventListener("input",()=>{
+ const q=search.value.trim().toLowerCase();
+ planets.forEach(p=>{
+   const match=!q || `${p.name} ${p.code} ${p.galaxy.name} ${p.type}`.toLowerCase().includes(q);
+   p.el.style.opacity=match?"1":".08";
+ });
+ if(q){
+   const first=planets.find(p=>`${p.name} ${p.code} ${p.galaxy.name} ${p.type}`.toLowerCase().includes(q));
+   if(first){showPlanet(first);focus(first.x,first.y,1.25)}
+ }
+});
+window.addEventListener("resize",()=>{if(scale===.78){tx=(innerWidth-1600*scale)/2;ty=(innerHeight-1000*scale)/2;apply()}});
+
+// initial centered view
+tx=(innerWidth-1600*scale)/2;ty=(innerHeight-1000*scale)/2;apply();
+</script>
+</body>
+</html>
