@@ -563,7 +563,7 @@
     {
       "id": 31,
       "code": "NI-07",
-      "name": "Erebus",
+      "name": "Null",
       "galaxyId": "NI",
       "type": "Ruína",
       "x": 1013.7690890872243,
@@ -572,9 +572,10 @@
       "distance": 165,
       "speed": 0.0023,
       "size": 10.886909984212252,
-      "desc": "Erebus é um mundo de ruína localizado no setor NIHILUS. Seu registro ainda contém regiões inexploradas e fenômenos que desafiam os mapas oficiais.",
+      "desc": "Null é um planeta completamente vazio e perfeitamente plano. Não existem montanhas, oceanos, florestas, construções ou qualquer forma de vida.\n\nSua superfície se estende em todas as direções como uma imensa planície sem fim. Não há nada para encontrar, conquistar ou explorar. O horizonte permanece sempre igual, sem mudanças no terreno.\n\nNão existe uma civilização nativa em Null. O planeta é utilizado apenas como um lugar de passagem, exílio ou simplesmente evitado por aqueles que consideram sua absoluta ausência de qualquer coisa perturbadora.",
       "population": "Alta",
-      "climate": "Árido"
+      "climate": "Árido",
+      "image": "/uploads/1788807804775.png"
     },
     {
       "id": 32,
