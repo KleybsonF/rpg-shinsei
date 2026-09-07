@@ -36,7 +36,7 @@ const elements = {
 
 async function loadData() {
   try {
-    const res = await fetch('/api/data');
+    const res = await fetch('/database.json');
     database = await res.json();
     populatePlanetsDropdown();
     renderList();

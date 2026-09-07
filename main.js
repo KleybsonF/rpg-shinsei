@@ -1,13 +1,13 @@
 let galaxies, planets, routes, bounties;
 try {
-  const response = await fetch('http://localhost:3000/api/data');
+  const response = await fetch('/database.json');
   const data = await response.json();
   galaxies = data.galaxies;
   planets = data.planets;
   routes = data.routes;
   bounties = data.bounties;
 } catch (e) {
-  console.error("Failed to load data from API. Is the server running?");
+  console.error("Failed to load data. Is database.json accessible?");
 }
 const NS = "http://www.w3.org/2000/svg";
 const svg = document.getElementById("map");
