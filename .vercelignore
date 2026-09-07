@@ -1,5 +1,4 @@
-package.json
-package-lock.json
+server.js
 server.js
 generate_data.js
 importBounties.js
