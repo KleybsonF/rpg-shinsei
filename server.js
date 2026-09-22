@@ -87,6 +87,46 @@ app.post('/api/bounties/:id', (req, res) => {
   }
 });
 
+app.post('/api/fichas', (req, res) => {
+  const db = getDatabase();
+  const newFicha = {
+    id: Date.now(),
+    ...req.body
+  };
+  if (!db.fichas) db.fichas = [];
+  db.fichas.push(newFicha);
+  saveDatabase(db);
+  res.json({ success: true, ficha: newFicha });
+});
+
+app.post('/api/fichas/:id', (req, res) => {
+  const db = getDatabase();
+  const id = parseInt(req.params.id);
+  if (!db.fichas) db.fichas = [];
+  const index = db.fichas.findIndex(f => f.id === id);
+  if (index !== -1) {
+    db.fichas[index] = { ...db.fichas[index], ...req.body };
+    saveDatabase(db);
+    res.json({ success: true, ficha: db.fichas[index] });
+  } else {
+    res.status(404).json({ error: 'Ficha not found' });
+  }
+});
+
+app.delete('/api/fichas/:id', (req, res) => {
+  const db = getDatabase();
+  const id = parseInt(req.params.id);
+  if (!db.fichas) db.fichas = [];
+  const index = db.fichas.findIndex(f => f.id === id);
+  if (index !== -1) {
+    db.fichas.splice(index, 1);
+    saveDatabase(db);
+    res.json({ success: true });
+  } else {
+    res.status(404).json({ error: 'Ficha not found' });
+  }
+});
+
 app.post('/api/upload', upload.single('image'), (req, res) => {
   if (req.file) {
     res.json({ success: true, url: `/uploads/${req.file.filename}` });

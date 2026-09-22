@@ -1,0 +1,305 @@
+:root {
+    --bg-dark: #0a0a0f;
+    --bg-panel: #151520;
+    --bg-panel-hover: #1e1e2d;
+    --text-main: #e0e0e0;
+    --text-muted: #8b8b99;
+    --accent-blue: #00d2ff;
+    --accent-blue-hover: #00a8cc;
+    --accent-green: #00ff88;
+    --accent-green-hover: #00cc6a;
+    --accent-red: #ff3366;
+    --accent-red-hover: #cc2952;
+    --border-color: #2a2a3a;
+    
+    --font-heading: 'Orbitron', sans-serif;
+    --font-body: 'Rajdhani', sans-serif;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-body);
+    background-color: var(--bg-dark);
+    color: var(--text-main);
+    height: 100vh;
+    display: flex;
+    overflow: hidden;
+}
+
+.fichas-container {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+/* Sidebar Styles */
+.sidebar {
+    width: 300px;
+    background-color: var(--bg-panel);
+    border-right: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar-header {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.sidebar-header h2 {
+    font-family: var(--font-heading);
+    color: var(--accent-blue);
+    font-size: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.lista-fichas {
+    list-style: none;
+    overflow-y: auto;
+    flex: 1;
+}
+
+.ficha-item {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ficha-item:hover {
+    background-color: var(--bg-panel-hover);
+}
+
+.ficha-item.active {
+    background-color: rgba(0, 210, 255, 0.1);
+    border-left: 4px solid var(--accent-blue);
+}
+
+.ficha-item-name {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+/* Main Content Styles */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+}
+
+.empty-state {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: var(--text-muted);
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.ficha-editor {
+    padding: 30px;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+.hidden {
+    display: none !important;
+}
+
+.editor-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.editor-header h2 {
+    font-family: var(--font-heading);
+    font-size: 1.8rem;
+    color: var(--text-main);
+}
+
+.header-actions {
+    display: flex;
+    gap: 10px;
+}
+
+/* Form Styles */
+.editor-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.info-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-group label {
+    font-family: var(--font-heading);
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+input[type="text"], textarea, input[type="number"] {
+    background-color: rgba(0, 0, 0, 0.5);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 12px 15px;
+    font-family: var(--font-body);
+    font-size: 1.1rem;
+    border-radius: 4px;
+    transition: border-color 0.3s;
+}
+
+input[type="text"]:focus, textarea:focus, input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent-blue);
+    box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+}
+
+textarea {
+    resize: vertical;
+}
+
+/* Table Styles */
+.atributos-section {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.atributos-section h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-blue);
+    margin-bottom: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.atributos-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.atributos-table th {
+    text-align: left;
+    padding: 10px;
+    border-bottom: 2px solid var(--border-color);
+    color: var(--text-muted);
+    font-family: var(--font-heading);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.atributos-table td {
+    padding: 12px 10px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.atributos-table td:first-child {
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.atributos-table input[type="number"] {
+    width: 80px;
+    text-align: center;
+    padding: 8px;
+}
+
+/* Button Styles */
+button {
+    font-family: var(--font-heading);
+    font-weight: 600;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary {
+    background-color: var(--accent-blue);
+    color: #000;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-blue-hover);
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+}
+
+.btn-success {
+    background-color: var(--accent-green);
+    color: #000;
+}
+
+.btn-success:hover {
+    background-color: var(--accent-green-hover);
+    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+}
+
+.btn-danger {
+    background-color: transparent;
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+
+.btn-danger:hover {
+    background-color: var(--accent-red);
+    color: #fff;
+    box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+}
+
+/* Scrollbar Customization */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-dark);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+@media (max-width: 900px) {
+    .editor-body {
+        grid-template-columns: 1fr;
+    }
+}

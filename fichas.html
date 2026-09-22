@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichas de Jogadores</title>
+    <link rel="stylesheet" href="fichas.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="fichas-container">
+        <!-- Sidebar para lista de fichas -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Jogadores</h2>
+                <button id="btn-nova-ficha" class="btn-primary">+ Nova Ficha</button>
+            </div>
+            <ul id="lista-fichas" class="lista-fichas">
+                <!-- Fichas serão carregadas aqui -->
+            </ul>
+        </aside>
+
+        <!-- Área principal de edição -->
+        <main class="main-content">
+            <div id="ficha-editor" class="ficha-editor hidden">
+                <header class="editor-header">
+                    <h2>Detalhes da Ficha</h2>
+                    <div class="header-actions">
+                        <button id="btn-salvar" class="btn-success">Salvar Ficha</button>
+                        <button id="btn-excluir" class="btn-danger">Excluir</button>
+                    </div>
+                </header>
+
+                <div class="editor-body">
+                    <!-- Informações Básicas -->
+                    <section class="info-section">
+                        <div class="form-group">
+                            <label for="ficha-nome">Nome</label>
+                            <input type="text" id="ficha-nome" placeholder="Nome do personagem..." autocomplete="off">
+                        </div>
+                        <div class="form-group">
+                            <label for="ficha-historia">História</label>
+                            <textarea id="ficha-historia" rows="5" placeholder="História do personagem..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label for="ficha-inventario">Inventário</label>
+                            <textarea id="ficha-inventario" rows="5" placeholder="Itens e equipamentos..."></textarea>
+                        </div>
+                    </section>
+
+                    <!-- Atributos -->
+                    <section class="atributos-section">
+                        <h3>Atributos</h3>
+                        <table class="atributos-table">
+                            <thead>
+                                <tr>
+                                    <th>Atributo</th>
+                                    <th>Nível</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Força</td>
+                                    <td><input type="number" id="attr-forca" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Destreza</td>
+                                    <td><input type="number" id="attr-destreza" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Mira</td>
+                                    <td><input type="number" id="attr-mira" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Resistência</td>
+                                    <td><input type="number" id="attr-resistencia" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Agilidade</td>
+                                    <td><input type="number" id="attr-agilidade" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Carisma</td>
+                                    <td><input type="number" id="attr-carisma" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Intuição</td>
+                                    <td><input type="number" id="attr-intuicao" min="0" value="0"></td>
+                                </tr>
+                                <tr>
+                                    <td>Estamina</td>
+                                    <td><input type="number" id="attr-estamina" min="0" value="0"></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </section>
+                </div>
+            </div>
+            
+            <div id="empty-state" class="empty-state">
+                <p>Selecione uma ficha na lista ou crie uma nova para começar.</p>
+            </div>
+        </main>
+    </div>
+
+    <script src="fichas.js"></script>
+</body>
+</html>
