@@ -1,4 +1,4 @@
-import { db, collection, query, where, onSnapshot } from './firebase.js';
+import { db, collection, query, where, onSnapshot, addDoc, orderBy, limit } from './firebase.js';
 
 // Verificação de Autenticação
 const loggedPlayerId = sessionStorage.getItem('loggedPlayerId');
@@ -101,5 +101,54 @@ const modal = document.getElementById('player-modal');
         }
     });
     
+    // Dice Logic
+    const btnRollD2 = document.getElementById('btn-roll-d2');
+    const diceLogs = document.getElementById('dice-logs');
+
+    if (btnRollD2) {
+        btnRollD2.addEventListener('click', async () => {
+            const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || 'Jogador Desconhecido';
+            const result = Math.floor(Math.random() * 2) + 1; // 1 ou 2
+            
+            try {
+                await addDoc(collection(db, "rolagens"), {
+                    playerId: loggedPlayerId,
+                    playerName: loggedPlayerName,
+                    result: result,
+                    timestamp: Date.now()
+                });
+            } catch (error) {
+                console.error("Erro ao rolar dado:", error);
+            }
+        });
+    }
+
+    // Listen to Dice Rolls
+    function loadDiceLogs() {
+        const qLogs = query(collection(db, "rolagens"), orderBy("timestamp", "desc"), limit(10));
+        
+        onSnapshot(qLogs, (snapshot) => {
+            diceLogs.innerHTML = '';
+            
+            if (snapshot.empty) {
+                diceLogs.innerHTML = '<p class="mesa-status">Nenhuma rolagem ainda...</p>';
+                return;
+            }
+
+            // We get them descending (newest first), but we want to display newest at the top
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data();
+                const div = document.createElement('div');
+                div.className = 'dice-log-item';
+                div.innerHTML = `
+                    <span class="log-player">${data.playerName}</span> rolou a moeda e tirou: 
+                    <span class="log-result">${data.result}</span>
+                `;
+                diceLogs.appendChild(div);
+            });
+        });
+    }
+
 // Start
 loadPlayers();
+loadDiceLogs();
