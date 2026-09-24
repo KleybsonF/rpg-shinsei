@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Mesa RPG</title>
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-box">
+            <h1>UNITY <span>SPACE</span></h1>
+            <h2>ACESSO DE JOGADOR</h2>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-user">Login</label>
+                    <input type="text" id="login-user" placeholder="Seu login..." autocomplete="off" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-pass">Senha</label>
+                    <input type="password" id="login-pass" placeholder="Sua senha..." required>
+                </div>
+                <div id="login-error" class="error-msg hidden">Login ou senha inválidos.</div>
+                <button type="submit" class="btn-login" id="btn-login">ENTRAR</button>
+            </form>
+        </div>
+    </div>
+
+    <script type="module" src="login.js"></script>
+</body>
+</html>

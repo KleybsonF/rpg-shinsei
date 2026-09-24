@@ -1,5 +1,11 @@
 import { db, collection, query, where, onSnapshot } from './firebase.js';
 
+// Verificação de Autenticação
+const loggedPlayerId = sessionStorage.getItem('loggedPlayerId');
+if (!loggedPlayerId) {
+    window.location.href = 'login.html';
+}
+
 const playersRing = document.getElementById('players-ring');
 const modal = document.getElementById('player-modal');
     const closeBtn = document.querySelector('.close-btn');
