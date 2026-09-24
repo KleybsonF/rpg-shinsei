@@ -12,6 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const inputNome = document.getElementById('ficha-nome');
     const inputHistoria = document.getElementById('ficha-historia');
     const inputInventario = document.getElementById('ficha-inventario');
+    const inputIsPlayer = document.getElementById('ficha-is-player');
+    const loginFields = document.getElementById('login-fields');
+    const inputLogin = document.getElementById('ficha-login');
+    const inputSenha = document.getElementById('ficha-senha');
     
     const attrInputs = {
         forca: document.getElementById('attr-forca'),
@@ -77,6 +81,15 @@ document.addEventListener('DOMContentLoaded', () => {
         inputNome.value = ficha.nome || '';
         inputHistoria.value = ficha.historia || '';
         inputInventario.value = ficha.inventario || '';
+        inputIsPlayer.checked = ficha.isPlayer || false;
+        inputLogin.value = ficha.login || '';
+        inputSenha.value = ficha.senha || '';
+
+        if (inputIsPlayer.checked) {
+            loginFields.classList.remove('hidden');
+        } else {
+            loginFields.classList.add('hidden');
+        }
         
         // Fill attributes
         const attrs = ficha.atributos || {};
@@ -100,6 +113,10 @@ document.addEventListener('DOMContentLoaded', () => {
         inputNome.value = '';
         inputHistoria.value = '';
         inputInventario.value = '';
+        inputIsPlayer.checked = false;
+        inputLogin.value = '';
+        inputSenha.value = '';
+        loginFields.classList.add('hidden');
         
         for (const key in attrInputs) {
             attrInputs[key].value = 0;
@@ -119,6 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
             nome: inputNome.value.trim(),
             historia: inputHistoria.value.trim(),
             inventario: inputInventario.value.trim(),
+            isPlayer: inputIsPlayer.checked,
+            login: inputIsPlayer.checked ? inputLogin.value.trim() : '',
+            senha: inputIsPlayer.checked ? inputSenha.value : '',
             atributos: {}
         };
 
@@ -186,6 +206,14 @@ document.addEventListener('DOMContentLoaded', () => {
     btnNovaFicha.addEventListener('click', createNovaFicha);
     btnSalvar.addEventListener('click', saveFicha);
     btnExcluir.addEventListener('click', deleteFicha);
+    
+    inputIsPlayer.addEventListener('change', (e) => {
+        if (e.target.checked) {
+            loginFields.classList.remove('hidden');
+        } else {
+            loginFields.classList.add('hidden');
+        }
+    });
 
     // Initial Load
     loadFichas();
