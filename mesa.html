@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mesa de RPG</title>
+    <link rel="stylesheet" href="mesa.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="mesa-container">
+        <!-- Mesa Central -->
+        <div class="mesa-central">
+            <h2>MESA CENTRAL</h2>
+            <div class="mesa-content">
+                <p class="mesa-status">Aguardando mestre...</p>
+            </div>
+        </div>
+        
+        <!-- Anel de Jogadores -->
+        <div class="players-ring" id="players-ring">
+            <!-- Jogadores serão renderizados aqui via JS -->
+        </div>
+    </div>
+
+    <!-- Modal de Informações do Personagem -->
+    <div id="player-modal" class="modal hidden">
+        <div class="modal-content">
+            <span class="close-btn">&times;</span>
+            <div class="modal-header">
+                <img id="modal-foto" src="" alt="Foto" class="modal-foto-lg">
+                <div class="modal-header-info">
+                    <h2 id="modal-nome">Nome do Personagem</h2>
+                    <span class="player-badge">PLAYER</span>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="info-section">
+                    <h3>História</h3>
+                    <p id="modal-historia"></p>
+                </div>
+                <div class="info-section">
+                    <h3>Inventário</h3>
+                    <p id="modal-inventario"></p>
+                </div>
+                <div class="atributos-section">
+                    <h3>Atributos</h3>
+                    <ul id="modal-atributos" class="atributos-list">
+                        <!-- Atributos -->
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="mesa.js"></script>
+</body>
+</html>

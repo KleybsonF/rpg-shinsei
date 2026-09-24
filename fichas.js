@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Inputs
     const inputNome = document.getElementById('ficha-nome');
+    const inputFoto = document.getElementById('ficha-foto');
     const inputHistoria = document.getElementById('ficha-historia');
     const inputInventario = document.getElementById('ficha-inventario');
     const inputIsPlayer = document.getElementById('ficha-is-player');
@@ -79,6 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Fill form
         inputNome.value = ficha.nome || '';
+        inputFoto.value = ficha.foto || '';
         inputHistoria.value = ficha.historia || '';
         inputInventario.value = ficha.inventario || '';
         inputIsPlayer.checked = ficha.isPlayer || false;
@@ -111,6 +113,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Clear form
         inputNome.value = '';
+        inputFoto.value = '';
         inputHistoria.value = '';
         inputInventario.value = '';
         inputIsPlayer.checked = false;
@@ -134,6 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const fichaData = {
             id: fichaAtualId || Date.now(),
             nome: inputNome.value.trim(),
+            foto: inputFoto.value.trim(),
             historia: inputHistoria.value.trim(),
             inventario: inputInventario.value.trim(),
             isPlayer: inputIsPlayer.checked,
