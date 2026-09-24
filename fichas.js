@@ -1,3 +1,5 @@
+import { db, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from './firebase.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     // Elements
     const listaFichas = document.getElementById('lista-fichas');
@@ -35,13 +37,14 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Fichas
     async function loadFichas() {
         try {
-            const response = await fetch('http://localhost:3000/api/data');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            fichas = data.fichas || [];
+            const querySnapshot = await getDocs(collection(db, "fichas"));
+            fichas = [];
+            querySnapshot.forEach((docSnap) => {
+                fichas.push({ id: docSnap.id, ...docSnap.data() });
+            });
             renderFichasList();
         } catch (error) {
-            console.error('Erro ao carregar fichas do servidor:', error);
+            console.error('Erro ao carregar fichas do Firebase:', error);
             fichas = [];
         }
     }
@@ -145,22 +148,12 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (fichaAtualId) {
                 // Update
-                const res = await fetch(`http://localhost:3000/api/fichas/${fichaAtualId}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fichaData)
-                });
-                if (!res.ok) throw new Error('Falha ao atualizar');
+                const fichaRef = doc(db, "fichas", fichaAtualId);
+                await updateDoc(fichaRef, fichaData);
             } else {
                 // Create
-                const res = await fetch('http://localhost:3000/api/fichas', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(fichaData)
-                });
-                if (!res.ok) throw new Error('Falha ao criar');
-                const data = await res.json();
-                fichaAtualId = data.ficha.id;
+                const docRef = await addDoc(collection(db, "fichas"), fichaData);
+                fichaAtualId = docRef.id;
             }
             
             alert('Ficha salva com sucesso!');
@@ -171,8 +164,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if(savedFicha) selectFicha(savedFicha);
 
         } catch (error) {
-            console.error('Erro ao salvar:', error);
-            alert('Erro ao salvar ficha no servidor.');
+            console.error('Erro ao salvar no Firebase:', error);
+            alert('Erro ao salvar ficha no banco de dados.');
         }
     }
 
@@ -186,10 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (confirm('Tem certeza que deseja excluir esta ficha? Essa ação não pode ser desfeita.')) {
             try {
-                const res = await fetch(`http://localhost:3000/api/fichas/${fichaAtualId}`, {
-                    method: 'DELETE'
-                });
-                if (!res.ok) throw new Error('Falha ao deletar');
+                await deleteDoc(doc(db, "fichas", fichaAtualId));
                 alert('Ficha excluída com sucesso!');
                 
                 fichaAtualId = null;
@@ -198,8 +188,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 
                 await loadFichas();
             } catch (error) {
-                console.error('Erro ao excluir:', error);
-                alert('Erro ao excluir ficha no servidor.');
+                console.error('Erro ao excluir no Firebase:', error);
+                alert('Erro ao excluir ficha no banco de dados.');
             }
         }
     }

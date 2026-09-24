@@ -1,3 +1,5 @@
+import { db, collection, query, where, onSnapshot } from './firebase.js';
+
 document.addEventListener('DOMContentLoaded', () => {
     const playersRing = document.getElementById('players-ring');
     const modal = document.getElementById('player-modal');
@@ -5,19 +7,20 @@ document.addEventListener('DOMContentLoaded', () => {
     
     let fichas = [];
 
-    // Load fichas that are marked as player
-    async function loadPlayers() {
-        try {
-            const response = await fetch('http://localhost:3000/api/data');
-            if (!response.ok) throw new Error('Network response was not ok');
-            const data = await response.json();
-            if (data && data.fichas) {
-                fichas = data.fichas.filter(f => f.isPlayer === true).slice(0, 8); // Max 8 players
-            }
-        } catch (error) {
-            console.error('Erro ao carregar jogadores do servidor:', error);
-        }
-        renderPlayers();
+    // Load fichas that are marked as player using real-time Firebase listener
+    function loadPlayers() {
+        const q = query(collection(db, "fichas"), where("isPlayer", "==", true));
+        
+        onSnapshot(q, (querySnapshot) => {
+            fichas = [];
+            querySnapshot.forEach((doc) => {
+                fichas.push({ id: doc.id, ...doc.data() });
+            });
+            fichas = fichas.slice(0, 8); // Max 8 players
+            renderPlayers();
+        }, (error) => {
+            console.error('Erro ao carregar jogadores do Firebase:', error);
+        });
     }
 
     // Position players in an oval/circle around the table
@@ -93,9 +96,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Auto refresh every 5 seconds to get updates if someone edited their ficha
-    setInterval(loadPlayers, 5000);
-
     // Start
     loadPlayers();
 });
