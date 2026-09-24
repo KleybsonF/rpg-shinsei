@@ -1,8 +1,7 @@
 import { db, collection, query, where, onSnapshot } from './firebase.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    const playersRing = document.getElementById('players-ring');
-    const modal = document.getElementById('player-modal');
+const playersRing = document.getElementById('players-ring');
+const modal = document.getElementById('player-modal');
     const closeBtn = document.querySelector('.close-btn');
     
     let fichas = [];
@@ -96,6 +95,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     
-    // Start
-    loadPlayers();
-});
+// Start
+loadPlayers();

@@ -1,8 +1,7 @@
 import { db, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from './firebase.js';
 
-document.addEventListener('DOMContentLoaded', () => {
-    // Elements
-    const listaFichas = document.getElementById('lista-fichas');
+// Elements
+const listaFichas = document.getElementById('lista-fichas');
     const btnNovaFicha = document.getElementById('btn-nova-ficha');
     const fichaEditor = document.getElementById('ficha-editor');
     const emptyState = document.getElementById('empty-state');
@@ -207,6 +206,5 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Initial Load
-    loadFichas();
-});
+// Initial Load
+loadFichas();
