@@ -35,7 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load Fichas
     async function loadFichas() {
         try {
-            const response = await fetch('/api/data');
+            const response = await fetch('http://localhost:3000/api/data');
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             fichas = data.fichas || [];
             renderFichasList();
@@ -144,18 +145,20 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             if (fichaAtualId) {
                 // Update
-                await fetch(`/api/fichas/${fichaAtualId}`, {
+                const res = await fetch(`http://localhost:3000/api/fichas/${fichaAtualId}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(fichaData)
                 });
+                if (!res.ok) throw new Error('Falha ao atualizar');
             } else {
                 // Create
-                const res = await fetch('/api/fichas', {
+                const res = await fetch('http://localhost:3000/api/fichas', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(fichaData)
                 });
+                if (!res.ok) throw new Error('Falha ao criar');
                 const data = await res.json();
                 fichaAtualId = data.ficha.id;
             }
@@ -183,9 +186,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (confirm('Tem certeza que deseja excluir esta ficha? Essa ação não pode ser desfeita.')) {
             try {
-                await fetch(`/api/fichas/${fichaAtualId}`, {
+                const res = await fetch(`http://localhost:3000/api/fichas/${fichaAtualId}`, {
                     method: 'DELETE'
                 });
+                if (!res.ok) throw new Error('Falha ao deletar');
                 alert('Ficha excluída com sucesso!');
                 
                 fichaAtualId = null;

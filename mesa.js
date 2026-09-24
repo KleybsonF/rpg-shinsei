@@ -8,7 +8,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Load fichas that are marked as player
     async function loadPlayers() {
         try {
-            const response = await fetch('/api/data');
+            const response = await fetch('http://localhost:3000/api/data');
+            if (!response.ok) throw new Error('Network response was not ok');
             const data = await response.json();
             if (data && data.fichas) {
                 fichas = data.fichas.filter(f => f.isPlayer === true).slice(0, 8); // Max 8 players
