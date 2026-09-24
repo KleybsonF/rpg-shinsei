@@ -6,15 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let fichas = [];
 
     // Load fichas that are marked as player
-    function loadPlayers() {
+    async function loadPlayers() {
         try {
-            const data = localStorage.getItem('fichas_db');
-            if (data) {
-                const allFichas = JSON.parse(data);
-                fichas = allFichas.filter(f => f.isPlayer === true).slice(0, 8); // Max 8 players
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            if (data && data.fichas) {
+                fichas = data.fichas.filter(f => f.isPlayer === true).slice(0, 8); // Max 8 players
             }
         } catch (error) {
-            console.error('Erro ao carregar jogadores:', error);
+            console.error('Erro ao carregar jogadores do servidor:', error);
         }
         renderPlayers();
     }

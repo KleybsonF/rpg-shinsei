@@ -33,24 +33,16 @@ document.addEventListener('DOMContentLoaded', () => {
     let fichaAtualId = null;
 
     // Load Fichas
-    function loadFichas() {
+    async function loadFichas() {
         try {
-            const data = localStorage.getItem('fichas_db');
-            if (data) {
-                fichas = JSON.parse(data);
-            } else {
-                fichas = [];
-            }
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            fichas = data.fichas || [];
             renderFichasList();
         } catch (error) {
-            console.error('Erro ao carregar fichas do LocalStorage:', error);
+            console.error('Erro ao carregar fichas do servidor:', error);
             fichas = [];
         }
-    }
-
-    // Save Fichas to DB
-    function persistFichas() {
-        localStorage.setItem('fichas_db', JSON.stringify(fichas));
     }
 
     // Render Sidebar List
@@ -133,9 +125,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Save Ficha
-    function saveFicha() {
+    async function saveFicha() {
         const fichaData = {
-            id: fichaAtualId || Date.now(),
             nome: inputNome.value.trim(),
             foto: inputFoto.value.trim(),
             historia: inputHistoria.value.trim(),
@@ -152,19 +143,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             if (fichaAtualId) {
-                const index = fichas.findIndex(f => f.id === fichaAtualId);
-                if (index !== -1) {
-                    fichas[index] = fichaData;
-                }
+                // Update
+                await fetch(`/api/fichas/${fichaAtualId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fichaData)
+                });
             } else {
-                fichas.push(fichaData);
-                fichaAtualId = fichaData.id;
+                // Create
+                const res = await fetch('/api/fichas', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(fichaData)
+                });
+                const data = await res.json();
+                fichaAtualId = data.ficha.id;
             }
             
-            persistFichas();
             alert('Ficha salva com sucesso!');
-            
-            loadFichas();
+            await loadFichas();
             
             // Re-select to show active state
             const savedFicha = fichas.find(f => f.id === fichaAtualId);
@@ -172,14 +169,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
         } catch (error) {
             console.error('Erro ao salvar:', error);
-            alert('Erro ao salvar ficha.');
+            alert('Erro ao salvar ficha no servidor.');
         }
     }
 
     // Delete Ficha
-    function deleteFicha() {
+    async function deleteFicha() {
         if (!fichaAtualId) {
-            // Se for uma ficha nova que ainda não foi salva
             fichaEditor.classList.add('hidden');
             emptyState.classList.remove('hidden');
             return;
@@ -187,21 +183,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (confirm('Tem certeza que deseja excluir esta ficha? Essa ação não pode ser desfeita.')) {
             try {
-                const index = fichas.findIndex(f => f.id === fichaAtualId);
-                if (index !== -1) {
-                    fichas.splice(index, 1);
-                    persistFichas();
-                    alert('Ficha excluída com sucesso!');
-                    
-                    fichaAtualId = null;
-                    fichaEditor.classList.add('hidden');
-                    emptyState.classList.remove('hidden');
-                    
-                    loadFichas();
-                }
+                await fetch(`/api/fichas/${fichaAtualId}`, {
+                    method: 'DELETE'
+                });
+                alert('Ficha excluída com sucesso!');
+                
+                fichaAtualId = null;
+                fichaEditor.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                
+                await loadFichas();
             } catch (error) {
                 console.error('Erro ao excluir:', error);
-                alert('Erro ao excluir ficha.');
+                alert('Erro ao excluir ficha no servidor.');
             }
         }
     }
