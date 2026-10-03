@@ -198,14 +198,16 @@ const modal = document.getElementById('player-modal');
                 } else if (data.tipo === 'dano_fisico') {
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> causou <b>Dano Físico</b> (Nível ${data.tier}):<br>
-                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO!</span> ' : ''}
-                        Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.dano}</span>
+                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO (×2)!</span><br>' : ''}
+                        Rolagem: ${data.expression}<br>
+                        Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
                 } else if (data.tipo === 'dano_mira') {
                     div.innerHTML = `
-                        <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Tier ${data.tier}):<br>
-                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO!</span> ' : ''}
-                        Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.dano}</span>
+                        <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Nível ${data.tier}):<br>
+                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO (×2)!</span><br>' : ''}
+                        Rolagem: ${data.expression}<br>
+                        Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
                 } else {
                     div.innerHTML = `
@@ -382,19 +384,6 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
 });
 
 // Lógica de Dano
-const damageTable = {
-    1: { normal: 20, crit: 40 },
-    2: { normal: 35, crit: 70 },
-    3: { normal: 50, crit: 100 },
-    4: { normal: 70, crit: 140 },
-    5: { normal: 90, crit: 180 },
-    6: { normal: 115, crit: 230 },
-    7: { normal: 140, crit: 280 },
-    8: { normal: 170, crit: 340 },
-    9: { normal: 205, crit: 410 },
-    10: { normal: 245, crit: 490 }
-};
-
 const critModal = document.getElementById('crit-modal');
 const btnCritNormal = document.getElementById('btn-crit-normal');
 const btnCritCritico = document.getElementById('btn-crit-critico');
@@ -428,12 +417,16 @@ if (btnDanoFisico) {
         const forca = attrs.forca || 0;
         const destreza = attrs.destreza || 0;
         
-        let tier = Math.floor((forca * 2) + (destreza / 3));
-        if (tier < 1) tier = 1;
-        if (tier > 10) tier = 10;
+        let nivel = Math.floor((forca * 2) + (destreza / 3));
+        if (nivel < 0) nivel = 0;
         
         const isCrit = await askCritPrompt("O ataque de Dano Físico foi um ACERTO CRÍTICO (20 no dado)?");
-        const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
+        let rollData = calculateAttributeRoll(nivel);
+        if (isCrit) {
+            rollData.result *= 2;
+            rollData.expression = `(${rollData.expression}) × 2`;
+        }
+        
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
         try {
@@ -441,9 +434,10 @@ if (btnDanoFisico) {
                 playerId: loggedPlayerId,
                 playerName: loggedPlayerName,
                 tipo: 'dano_fisico',
-                tier: tier,
+                tier: nivel,
                 isCrit: isCrit,
-                dano: dano,
+                expression: rollData.expression,
+                result: rollData.result,
                 timestamp: Date.now()
             });
         } catch (error) {
@@ -459,12 +453,16 @@ if (btnDanoMira) {
         if (!myFicha) return;
         
         const attrs = myFicha.atributos || {};
-        let tier = parseInt(attrs.armaTier) || 1;
-        if (tier < 1) tier = 1;
-        if (tier > 10) tier = 10;
+        let nivel = parseInt(attrs.armaNivel) || 0;
+        if (nivel < 0) nivel = 0;
         
         const isCrit = await askCritPrompt("O ataque de Dano Mira foi um ACERTO CRÍTICO (19 ou 20 no dado)?");
-        const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
+        let rollData = calculateAttributeRoll(nivel);
+        if (isCrit) {
+            rollData.result *= 2;
+            rollData.expression = `(${rollData.expression}) × 2`;
+        }
+        
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
         try {
@@ -472,9 +470,10 @@ if (btnDanoMira) {
                 playerId: loggedPlayerId,
                 playerName: loggedPlayerName,
                 tipo: 'dano_mira',
-                tier: tier,
+                tier: nivel,
                 isCrit: isCrit,
-                dano: dano,
+                expression: rollData.expression,
+                result: rollData.result,
                 timestamp: Date.now()
             });
         } catch (error) {

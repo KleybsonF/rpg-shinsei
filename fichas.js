@@ -29,7 +29,7 @@ const listaFichas = document.getElementById('lista-fichas');
         carisma: document.getElementById('attr-carisma'),
         intuicao: document.getElementById('attr-intuicao'),
         estamina: document.getElementById('attr-estamina'),
-        armaTier: document.getElementById('attr-arma-tier')
+        armaNivel: document.getElementById('attr-arma-nivel')
     };
 
     const statusInputs = {
@@ -109,11 +109,7 @@ const listaFichas = document.getElementById('lista-fichas');
         // Fill attributes
         const attrs = ficha.atributos || {};
         for (const key in attrInputs) {
-            if (key === 'armaTier') {
-                attrInputs[key].value = attrs[key] || "1";
-            } else {
-                attrInputs[key].value = attrs[key] || 0;
-            }
+            attrInputs[key].value = attrs[key] || 0;
         }
 
         // Fill status
@@ -151,11 +147,7 @@ const listaFichas = document.getElementById('lista-fichas');
         loginFields.classList.add('hidden');
         
         for (const key in attrInputs) {
-            if (key === 'armaTier') {
-                attrInputs[key].value = "1";
-            } else {
-                attrInputs[key].value = 0;
-            }
+            attrInputs[key].value = 0;
         }
         
         for (const key in statusInputs) {
