@@ -241,6 +241,24 @@ const listaFichas = document.getElementById('lista-fichas');
         }
     }
     
+    function recalcularVidaMax() {
+        const res = parseInt(attrInputs.resistencia.value) || 0;
+        const forca = parseInt(attrInputs.forca.value) || 0;
+        const novaVidaMax = 50 + (res * 10) + (forca * 2);
+        
+        statusInputs.vidaMax.value = novaVidaMax;
+        
+        // Garante que a vida atual suba junto se for ficha nova, ou seja capada se perder atributos
+        if (!fichaAtualId || (parseInt(statusInputs.vidaAtual.value) || 0) === 0) {
+            statusInputs.vidaAtual.value = novaVidaMax;
+        } else if ((parseInt(statusInputs.vidaAtual.value) || 0) > novaVidaMax) {
+            statusInputs.vidaAtual.value = novaVidaMax;
+        }
+    }
+    
+    attrInputs.resistencia.addEventListener('input', recalcularVidaMax);
+    attrInputs.forca.addEventListener('input', recalcularVidaMax);
+
     inputIsPlayer.addEventListener('change', toggleLoginFields);
     inputIsMaster.addEventListener('change', toggleLoginFields);
 
