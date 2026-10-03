@@ -371,43 +371,56 @@ if (btnStartRadio && btnListenRadio) {
     });
 
     // Modo Ouvinte (Jogadores)
-    btnListenRadio.addEventListener('click', () => {
-        if (!peer) {
-            peer = new Peer(); // Peer genérico para o jogador
-        }
+    function connectToRadio() {
+        // Cria um stream de áudio vazio/fantasma para o PeerJS não travar a conexão
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const dest = ctx.createMediaStreamDestination();
+        const dummyStream = dest.stream;
 
-        peer.on('open', () => {
-            radioStatus.textContent = 'Conectando ao rádio...';
-            
-            // Liga para o ID fixo do rádio
-            const call = peer.call(TABLE_RADIO_ID, new MediaStream()); // Manda stream vazio pra receber o do mestre
-            
-            call.on('stream', (remoteStream) => {
-                radioPlayer.srcObject = remoteStream;
-                radioStatus.textContent = '📻 Sintonizado no rádio da mesa!';
-                radioStatus.style.color = '#00d2ff';
-                btnListenRadio.disabled = true;
-            });
-
-            call.on('error', (err) => {
-                console.error('Erro na chamada:', err);
-                radioStatus.textContent = 'Erro ao conectar. O rádio está online?';
-                radioStatus.style.color = 'red';
-            });
-            
-            call.on('close', () => {
-                radioStatus.textContent = 'Transmissão encerrada.';
-                radioStatus.style.color = 'gray';
-                btnListenRadio.disabled = false;
-            });
-            
-            currentCall = call;
+        // Liga para o ID fixo do rádio
+        const call = peer.call(TABLE_RADIO_ID, dummyStream); 
+        
+        call.on('stream', (remoteStream) => {
+            radioPlayer.srcObject = remoteStream;
+            radioStatus.textContent = '📻 Sintonizado no rádio da mesa!';
+            radioStatus.style.color = '#00d2ff';
+            btnListenRadio.disabled = true;
         });
 
-        peer.on('error', (err) => {
-            console.error(err);
-            radioStatus.textContent = 'Erro de conexão ou Rádio offline.';
+        call.on('error', (err) => {
+            console.error('Erro na chamada:', err);
+            radioStatus.textContent = 'Erro ao conectar. O rádio está online?';
             radioStatus.style.color = 'red';
         });
+        
+        call.on('close', () => {
+            radioStatus.textContent = 'Transmissão encerrada.';
+            radioStatus.style.color = 'gray';
+            btnListenRadio.disabled = false;
+        });
+        
+        currentCall = call;
+    }
+
+    btnListenRadio.addEventListener('click', () => {
+        radioStatus.textContent = 'Conectando ao rádio...';
+        
+        if (!peer) {
+            peer = new Peer(); // Peer genérico para o jogador
+            
+            peer.on('open', () => {
+                connectToRadio();
+            });
+
+            peer.on('error', (err) => {
+                console.error(err);
+                radioStatus.textContent = 'Erro de conexão ou Rádio offline.';
+                radioStatus.style.color = 'red';
+                peer = null;
+            });
+        } else {
+            // Se já estava conectado à rede P2P, só faz a chamada
+            connectToRadio();
+        }
     });
 }
