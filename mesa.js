@@ -409,7 +409,7 @@ if (btnDanoFisico) {
         if (tier < 1) tier = 1;
         if (tier > 10) tier = 10;
         
-        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (19-20 no dado)?");
+        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (20 no dado)?");
         const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
@@ -440,7 +440,7 @@ if (btnDanoMira) {
         if (tier < 1) tier = 1;
         if (tier > 10) tier = 10;
         
-        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (19-20 no dado)?");
+        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (19 ou 20 no dado)?");
         const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
