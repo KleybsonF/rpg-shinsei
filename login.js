@@ -32,7 +32,8 @@ loginForm.addEventListener('submit', async (e) => {
             sessionStorage.setItem('loggedPlayerId', ficha.id);
             sessionStorage.setItem('loggedPlayerName', ficha.data().nome);
             
-            const isMaster = (ficha.data().login === 'mestre' || ficha.data().nome.toLowerCase() === 'mestre' || ficha.data().isMaster);
+            const nomeFicha = ficha.data().nome || '';
+            const isMaster = (ficha.data().login === 'mestre' || nomeFicha.toLowerCase() === 'mestre' || ficha.data().isMaster);
             if (isMaster) {
                 sessionStorage.setItem('isMaster', 'true');
             } else {

@@ -74,6 +74,22 @@ const modal = document.getElementById('player-modal');
         document.getElementById('modal-historia').textContent = ficha.historia || 'Nenhuma história definida.';
         document.getElementById('modal-inventario').textContent = ficha.inventario || 'Inventário vazio.';
         
+        const statusList = document.getElementById('modal-status');
+        statusList.innerHTML = '';
+        const stats = ficha.status || {};
+        
+        const statNames = [
+            { label: 'Vida', current: stats.vidaAtual, max: stats.vidaMax },
+            { label: 'Sanidade', current: stats.sanidadeAtual, max: stats.sanidadeMax },
+            { label: 'Estamina', current: stats.estaminaAtual, max: stats.estaminaMax }
+        ];
+        
+        statNames.forEach(s => {
+            const li = document.createElement('li');
+            li.innerHTML = `<span class="attr-name">${s.label}</span> <span class="attr-val" style="color: var(--accent-blue);">${s.current || 0} / ${s.max || 0}</span>`;
+            statusList.appendChild(li);
+        });
+        
         const attrsList = document.getElementById('modal-atributos');
         attrsList.innerHTML = '';
         
