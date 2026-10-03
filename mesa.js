@@ -284,8 +284,22 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
         const attrValue = (myFicha.atributos && myFicha.atributos[attrName]) ? myFicha.atributos[attrName] : 0;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Jogador';
         
-        // Se for um dos atributos da nova regra, usa a nova rolagem, se não, usamos o padrão (aplicarei para todos por padrão)
-        const rollData = calculateAttributeRoll(attrValue);
+        // Apenas Força, Destreza, Mira, Agilidade e Carisma usam a nova tabela de escalonamento.
+        let rollData;
+        const validAttributes = ['forca', 'destreza', 'mira', 'agilidade', 'carisma'];
+        
+        if (validAttributes.includes(attrName)) {
+            rollData = calculateAttributeRoll(attrValue);
+        } else {
+            // Resistência, Intuição e outros usam o padrão 1D20 + Atributo
+            const dadoResult = Math.floor(Math.random() * 20) + 1;
+            rollData = {
+                result: dadoResult + attrValue,
+                expression: `[${dadoResult}] + ${attrValue}`,
+                desc: `1D20 + Atributo`,
+                max: 20 + attrValue
+            };
+        }
         
         try {
             await addDoc(collection(db, "rolagens"), {
