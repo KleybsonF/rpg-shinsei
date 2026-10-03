@@ -195,6 +195,18 @@ const modal = document.getElementById('player-modal');
                             <br>Resultado: ${data.expression} = <span class="log-result">${data.result}</span>
                         `;
                     }
+                } else if (data.tipo === 'dano_fisico') {
+                    div.innerHTML = `
+                        <span class="log-player">${data.playerName}</span> causou <b>Dano Físico</b> (Nível ${data.tier}):<br>
+                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO!</span> ' : ''}
+                        Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.dano}</span>
+                    `;
+                } else if (data.tipo === 'dano_mira') {
+                    div.innerHTML = `
+                        <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Tier ${data.tier}):<br>
+                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO!</span> ' : ''}
+                        Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.dano}</span>
+                    `;
                 } else {
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> rolou a moeda e tirou: 
@@ -366,8 +378,87 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
         } catch (error) {
             console.error("Erro ao rolar atributo:", error);
         }
-    });
 });
+});
+
+// Lógica de Dano
+const damageTable = {
+    1: { normal: 20, crit: 40 },
+    2: { normal: 35, crit: 70 },
+    3: { normal: 50, crit: 100 },
+    4: { normal: 70, crit: 140 },
+    5: { normal: 90, crit: 180 },
+    6: { normal: 115, crit: 230 },
+    7: { normal: 140, crit: 280 },
+    8: { normal: 170, crit: 340 },
+    9: { normal: 205, crit: 410 },
+    10: { normal: 245, crit: 490 }
+};
+
+const btnDanoFisico = document.getElementById('btn-dano-fisico');
+if (btnDanoFisico) {
+    btnDanoFisico.addEventListener('click', async () => {
+        const myFicha = fichas.find(f => f.id === loggedPlayerId);
+        if (!myFicha) return;
+        
+        const attrs = myFicha.atributos || {};
+        const forca = attrs.forca || 0;
+        const destreza = attrs.destreza || 0;
+        
+        let tier = Math.floor((forca * 2) + (destreza / 3));
+        if (tier < 1) tier = 1;
+        if (tier > 10) tier = 10;
+        
+        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (19-20 no dado)?");
+        const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
+        const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
+        
+        try {
+            await addDoc(collection(db, "rolagens"), {
+                playerId: loggedPlayerId,
+                playerName: loggedPlayerName,
+                tipo: 'dano_fisico',
+                tier: tier,
+                isCrit: isCrit,
+                dano: dano,
+                timestamp: Date.now()
+            });
+        } catch (error) {
+            console.error("Erro ao rolar dano fisico:", error);
+        }
+    });
+}
+
+const btnDanoMira = document.getElementById('btn-dano-mira');
+if (btnDanoMira) {
+    btnDanoMira.addEventListener('click', async () => {
+        const myFicha = fichas.find(f => f.id === loggedPlayerId);
+        if (!myFicha) return;
+        
+        const attrs = myFicha.atributos || {};
+        let tier = parseInt(attrs.armaTier) || 1;
+        if (tier < 1) tier = 1;
+        if (tier > 10) tier = 10;
+        
+        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (19-20 no dado)?");
+        const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
+        const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
+        
+        try {
+            await addDoc(collection(db, "rolagens"), {
+                playerId: loggedPlayerId,
+                playerName: loggedPlayerName,
+                tipo: 'dano_mira',
+                tier: tier,
+                isCrit: isCrit,
+                dano: dano,
+                timestamp: Date.now()
+            });
+        } catch (error) {
+            console.error("Erro ao rolar dano mira:", error);
+        }
+    });
+}
 
 // Spotify Jam Sync
 const btnSyncSpotify = document.getElementById('btn-sync-spotify');
