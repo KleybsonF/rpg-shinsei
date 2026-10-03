@@ -123,6 +123,9 @@ const listaFichas = document.getElementById('lista-fichas');
         
         // Update list active state
         renderFichasList();
+        
+        // Recalcular HP base para ter certeza que bate com a fórmula
+        recalcularVidaMax();
     }
 
     // Create New Ficha
@@ -153,6 +156,9 @@ const listaFichas = document.getElementById('lista-fichas');
         
         // Remove active class from list
         document.querySelectorAll('.ficha-item').forEach(item => item.classList.remove('active'));
+        
+        // Set inicial attributes to trigger initial HP formula
+        recalcularVidaMax();
     }
 
     // Save Ficha
@@ -248,11 +254,14 @@ const listaFichas = document.getElementById('lista-fichas');
         
         statusInputs.vidaMax.value = novaVidaMax;
         
-        // Garante que a vida atual suba junto se for ficha nova, ou seja capada se perder atributos
-        if (!fichaAtualId || (parseInt(statusInputs.vidaAtual.value) || 0) === 0) {
+        // Garante que a vida atual comece cheia para fichas novas, e seja capada se perder atributos
+        if (!fichaAtualId) {
             statusInputs.vidaAtual.value = novaVidaMax;
-        } else if ((parseInt(statusInputs.vidaAtual.value) || 0) > novaVidaMax) {
-            statusInputs.vidaAtual.value = novaVidaMax;
+        } else {
+            let vidaAtual = parseInt(statusInputs.vidaAtual.value) || 0;
+            if (vidaAtual > novaVidaMax) {
+                statusInputs.vidaAtual.value = novaVidaMax;
+            }
         }
     }
     
