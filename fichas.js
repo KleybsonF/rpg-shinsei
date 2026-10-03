@@ -29,7 +29,8 @@ const listaFichas = document.getElementById('lista-fichas');
         carisma: document.getElementById('attr-carisma'),
         intuicao: document.getElementById('attr-intuicao'),
         estamina: document.getElementById('attr-estamina'),
-        armaNivel: document.getElementById('attr-arma-nivel')
+        armaNivel: document.getElementById('attr-arma-nivel'),
+        armaEquipada: document.getElementById('attr-arma-equipada')
     };
 
     const statusInputs = {
@@ -109,7 +110,11 @@ const listaFichas = document.getElementById('lista-fichas');
         // Fill attributes
         const attrs = ficha.atributos || {};
         for (const key in attrInputs) {
-            attrInputs[key].value = attrs[key] || 0;
+            if (attrInputs[key].type === 'checkbox') {
+                attrInputs[key].checked = attrs[key] || false;
+            } else {
+                attrInputs[key].value = attrs[key] || 0;
+            }
         }
 
         // Fill status
@@ -147,7 +152,11 @@ const listaFichas = document.getElementById('lista-fichas');
         loginFields.classList.add('hidden');
         
         for (const key in attrInputs) {
-            attrInputs[key].value = 0;
+            if (attrInputs[key].type === 'checkbox') {
+                attrInputs[key].checked = false;
+            } else {
+                attrInputs[key].value = 0;
+            }
         }
         
         for (const key in statusInputs) {
@@ -186,7 +195,11 @@ const listaFichas = document.getElementById('lista-fichas');
         };
 
         for (const key in attrInputs) {
-            fichaData.atributos[key] = parseInt(attrInputs[key].value) || 0;
+            if (attrInputs[key].type === 'checkbox') {
+                fichaData.atributos[key] = attrInputs[key].checked;
+            } else {
+                fichaData.atributos[key] = parseInt(attrInputs[key].value) || 0;
+            }
         }
 
         try {

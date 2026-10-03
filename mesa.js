@@ -196,14 +196,32 @@ const modal = document.getElementById('player-modal');
                         `;
                     }
                 } else if (data.tipo === 'dano_fisico') {
+                    let acertoHtml = '';
+                    if (data.acertoType === 'crit') {
+                        acertoHtml = `<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO! (Dado = ${data.acerto})</span><br>`;
+                    } else if (data.acertoType === 'half') {
+                        acertoHtml = `<span style="color: #ffaa00;">De Raspão... (Dado = ${data.acerto})</span><br>`;
+                    } else {
+                        acertoHtml = `<span style="color: #a8b2c1;">Acerto Normal (Dado = ${data.acerto})</span><br>`;
+                    }
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> causou <b>Dano Físico</b> (Nível ${data.tier}):<br>
+                        ${acertoHtml}
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
                 } else if (data.tipo === 'dano_mira') {
+                    let acertoHtml = '';
+                    if (data.acertoType === 'crit') {
+                        acertoHtml = `<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO! (Dado = ${data.acerto})</span><br>`;
+                    } else if (data.acertoType === 'half') {
+                        acertoHtml = `<span style="color: #ffaa00;">De Raspão... (Dado = ${data.acerto})</span><br>`;
+                    } else {
+                        acertoHtml = `<span style="color: #a8b2c1;">Acerto Normal (Dado = ${data.acerto})</span><br>`;
+                    }
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Nível ${data.tier}):<br>
+                        ${acertoHtml}
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
@@ -395,7 +413,24 @@ if (btnDanoFisico) {
         let nivel = Math.floor((forca * 2) + (destreza / 3));
         if (nivel < 0) nivel = 0;
         
+        let acerto = Math.floor(Math.random() * 20) + 1;
+        let multiplicador = 1;
+        let acertoType = 'normal';
+        
+        if (acerto < 10) {
+            multiplicador = 0.5;
+            acertoType = 'half';
+        } else if (acerto >= 19) {
+            multiplicador = 2;
+            acertoType = 'crit';
+        }
+
         let rollData = calculateAttributeRoll(nivel);
+        rollData.result = Math.floor(rollData.result * multiplicador);
+        if (multiplicador !== 1) {
+            rollData.expression = `(${rollData.expression}) × ${multiplicador}`;
+        }
+        
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
         try {
@@ -404,6 +439,8 @@ if (btnDanoFisico) {
                 playerName: loggedPlayerName,
                 tipo: 'dano_fisico',
                 tier: nivel,
+                acerto: acerto,
+                acertoType: acertoType,
                 expression: rollData.expression,
                 result: rollData.result,
                 timestamp: Date.now()
@@ -421,10 +458,33 @@ if (btnDanoMira) {
         if (!myFicha) return;
         
         const attrs = myFicha.atributos || {};
+        const temArma = attrs.armaEquipada;
+        if (!temArma) {
+            alert("Você está desarmado! Vá na aba de Fichas e marque a opção 'Tem Arma?' para poder rolar dano com arma.");
+            return;
+        }
+
         let nivel = parseInt(attrs.armaNivel) || 0;
         if (nivel < 0) nivel = 0;
         
+        let acerto = Math.floor(Math.random() * 20) + 1;
+        let multiplicador = 1;
+        let acertoType = 'normal';
+        
+        if (acerto < 10) {
+            multiplicador = 0.5;
+            acertoType = 'half';
+        } else if (acerto >= 19) {
+            multiplicador = 2;
+            acertoType = 'crit';
+        }
+
         let rollData = calculateAttributeRoll(nivel);
+        rollData.result = Math.floor(rollData.result * multiplicador);
+        if (multiplicador !== 1) {
+            rollData.expression = `(${rollData.expression}) × ${multiplicador}`;
+        }
+        
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
         try {
@@ -433,6 +493,8 @@ if (btnDanoMira) {
                 playerName: loggedPlayerName,
                 tipo: 'dano_mira',
                 tier: nivel,
+                acerto: acerto,
+                acertoType: acertoType,
                 expression: rollData.expression,
                 result: rollData.result,
                 timestamp: Date.now()
