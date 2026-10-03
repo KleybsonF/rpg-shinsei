@@ -41,17 +41,24 @@ const listaFichas = document.getElementById('lista-fichas');
     let fichas = [];
     let fichaAtualId = null;
 
-    // Load Fichas
     async function loadFichas() {
         const loggedPlayerId = sessionStorage.getItem('loggedPlayerId');
         const isMaster = sessionStorage.getItem('isMaster') === 'true';
 
         try {
             const querySnapshot = await getDocs(collection(db, "fichas"));
+            
+            // Segurança: Se não está logado e já existem fichas, redireciona pro login
+            if (!querySnapshot.empty && !loggedPlayerId && !isMaster) {
+                alert("Você não está logado! Redirecionando para a tela de login para validar suas permissões...");
+                window.location.href = "login.html";
+                return;
+            }
+
             fichas = [];
             querySnapshot.forEach((docSnap) => {
                 const data = docSnap.data();
-                if (isMaster || docSnap.id === loggedPlayerId) {
+                if (isMaster || docSnap.id === loggedPlayerId || (!loggedPlayerId && querySnapshot.empty)) {
                     fichas.push({ id: docSnap.id, ...data });
                 }
             });
