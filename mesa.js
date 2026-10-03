@@ -400,6 +400,19 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
 });
 
 // Lógica de Dano
+const weaponDamageTable = {
+    1: 20,
+    2: 35,
+    3: 50,
+    4: 70,
+    5: 90,
+    6: 115,
+    7: 140,
+    8: 170,
+    9: 205,
+    10: 245
+};
+
 const btnDanoFisico = document.getElementById('btn-dano-fisico');
 if (btnDanoFisico) {
     btnDanoFisico.addEventListener('click', async () => {
@@ -459,8 +472,8 @@ if (btnDanoMira) {
         
         const attrs = myFicha.atributos || {};
 
-        let nivel = parseInt(attrs.armaNivel);
-        if (isNaN(nivel) || nivel < 0) {
+        let tier = parseInt(attrs.armaNivel);
+        if (isNaN(tier) || tier < 1) {
             alert("Você está desarmado! Vá na aba de Fichas e selecione um Ranking de arma para poder atirar.");
             return;
         }
@@ -477,10 +490,11 @@ if (btnDanoMira) {
             acertoType = 'crit';
         }
 
-        let rollData = calculateAttributeRoll(nivel);
-        rollData.result = Math.floor(rollData.result * multiplicador);
+        let baseDmg = weaponDamageTable[tier] || 0;
+        let result = Math.floor(baseDmg * multiplicador);
+        let expression = `${baseDmg} (Base)`;
         if (multiplicador !== 1) {
-            rollData.expression = `(${rollData.expression}) × ${multiplicador}`;
+            expression = `${baseDmg} × ${multiplicador}`;
         }
         
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
@@ -490,11 +504,11 @@ if (btnDanoMira) {
                 playerId: loggedPlayerId,
                 playerName: loggedPlayerName,
                 tipo: 'dano_mira',
-                tier: nivel,
+                tier: tier,
                 acerto: acerto,
                 acertoType: acertoType,
-                expression: rollData.expression,
-                result: rollData.result,
+                expression: expression,
+                result: result,
                 timestamp: Date.now()
             });
         } catch (error) {
