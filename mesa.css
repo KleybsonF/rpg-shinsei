@@ -338,14 +338,21 @@ body {
 }
 
 .spotify-panel {
-    width: 100%;
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--border-color);
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 300px;
+    background: rgba(21, 21, 32, 0.9);
+    border: 1px solid var(--accent-blue);
+    border-radius: 15px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
+    z-index: 30;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15);
 }
 
 .spotify-panel h4 {
@@ -359,8 +366,7 @@ body {
     display: flex;
     gap: 10px;
     justify-content: center;
-    width: 90%;
-    max-width: 400px;
+    width: 100%;
 }
 
 .spotify-controls input[type="text"] {
@@ -401,8 +407,7 @@ body {
 }
 
 #spotify-embed-container {
-    width: 90%;
-    max-width: 400px;
+    width: 100%;
     min-height: 80px;
     border-radius: 12px;
     overflow: hidden;
