@@ -12,6 +12,7 @@ const listaFichas = document.getElementById('lista-fichas');
     // Inputs
     const inputNome = document.getElementById('ficha-nome');
     const inputFoto = document.getElementById('ficha-foto');
+    const inputHistoria = document.getElementById('ficha-historia');
     const inputInventario = document.getElementById('ficha-inventario');
     const inputIsPlayer = document.getElementById('ficha-is-player');
     const inputIsMaster = document.getElementById('ficha-is-master');
