@@ -21,7 +21,6 @@ loginForm.addEventListener('submit', async (e) => {
     try {
         const q = query(
             collection(db, "fichas"), 
-            where("isPlayer", "==", true),
             where("login", "==", user),
             where("senha", "==", pass)
         );
