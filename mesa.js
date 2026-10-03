@@ -331,8 +331,14 @@ if (btnSyncSpotify && inputSpotifyLink) {
         if (!url) return;
         
         let embedUrl = url;
-        // Se for um link comum do spotify (ex: https://open.spotify.com/playlist/...) converte para embed
-        if (url.includes('open.spotify.com') && !url.includes('/embed/')) {
+        let isJamLink = false;
+
+        // Se for um link de convite para Jam (spotify.link ou spotify.app.link)
+        if (url.includes('spotify.link') || url.includes('spotify.app.link')) {
+            isJamLink = true;
+        } 
+        // Se for um link comum do spotify (playlist/musica) converte para embed
+        else if (url.includes('open.spotify.com') && !url.includes('/embed/')) {
             embedUrl = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
             // Remove queries se existirem
             embedUrl = embedUrl.split('?')[0];
@@ -342,6 +348,7 @@ if (btnSyncSpotify && inputSpotifyLink) {
             const radioRef = doc(db, "system", "spotify-jam");
             await updateDoc(radioRef, {
                 url: embedUrl,
+                isJamLink: isJamLink,
                 updatedAt: Date.now()
             });
             inputSpotifyLink.value = '';
@@ -352,6 +359,7 @@ if (btnSyncSpotify && inputSpotifyLink) {
                 const { setDoc } = await import('./firebase.js');
                 await setDoc(doc(db, "system", "spotify-jam"), {
                     url: embedUrl,
+                    isJamLink: isJamLink,
                     updatedAt: Date.now()
                 });
                 inputSpotifyLink.value = '';
@@ -369,7 +377,16 @@ function listenSpotifyJam() {
         if (docSnap.exists()) {
             const data = docSnap.data();
             if (data.url && spotifyEmbedContainer) {
-                spotifyEmbedContainer.innerHTML = `<iframe style="border-radius:12px" src="${data.url}?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+                if (data.isJamLink) {
+                    spotifyEmbedContainer.innerHTML = `
+                        <div style="padding: 15px; background: rgba(30,215,96,0.1); border: 1px solid #1ed760; border-radius: 8px; text-align: center; margin-top: 10px;">
+                            <p style="margin-bottom: 10px; color: #1ed760; font-weight: bold; font-family: var(--font-heading);">Uma Jam foi iniciada!</p>
+                            <a href="${data.url}" target="_blank" class="btn-success" style="text-decoration: none; display: inline-block;">🎧 Entrar na Jam</a>
+                        </div>
+                    `;
+                } else {
+                    spotifyEmbedContainer.innerHTML = `<iframe style="border-radius:12px; margin-top: 10px;" src="${data.url}?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+                }
             }
         }
     });
