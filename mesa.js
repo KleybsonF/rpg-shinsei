@@ -1,4 +1,4 @@
-import { db, collection, query, where, onSnapshot, addDoc, orderBy, limit } from './firebase.js';
+import { db, collection, query, where, onSnapshot, addDoc, orderBy, limit, doc, updateDoc } from './firebase.js';
 
 // Verificação de Autenticação
 const loggedPlayerId = sessionStorage.getItem('loggedPlayerId');
@@ -23,6 +23,7 @@ const modal = document.getElementById('player-modal');
             });
             fichas = fichas.slice(0, 8); // Max 8 players
             renderPlayers();
+            updatePlayerPanel();
         }, (error) => {
             console.error('Erro ao carregar jogadores do Firebase:', error);
         });
@@ -140,10 +141,17 @@ const modal = document.getElementById('player-modal');
                 const data = docSnap.data();
                 const div = document.createElement('div');
                 div.className = 'dice-log-item';
-                div.innerHTML = `
-                    <span class="log-player">${data.playerName}</span> rolou a moeda e tirou: 
-                    <span class="log-result">${data.result}</span>
-                `;
+                if (data.tipo === 'atributo') {
+                    div.innerHTML = `
+                        <span class="log-player">${data.playerName}</span> rolou 1D20 para <b>${data.atributo.toUpperCase()}</b>:
+                        (Dado: ${data.dadoResult} + Atributo: ${data.attrValue}) = <span class="log-result">${data.result}</span>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <span class="log-player">${data.playerName}</span> rolou a moeda e tirou: 
+                        <span class="log-result">${data.result}</span>
+                    `;
+                }
                 diceLogs.appendChild(div);
             });
         });
@@ -152,3 +160,82 @@ const modal = document.getElementById('player-modal');
 // Start
 loadPlayers();
 loadDiceLogs();
+
+// Player Panel Logic
+function updatePlayerPanel() {
+    const playerPanel = document.getElementById('player-panel');
+    const myFicha = fichas.find(f => f.id === loggedPlayerId);
+    
+    if (!myFicha) {
+        playerPanel.classList.add('hidden');
+        return;
+    }
+    
+    playerPanel.classList.remove('hidden');
+    document.getElementById('current-player-name').textContent = myFicha.nome || 'Meu Personagem';
+    
+    const stats = myFicha.status || {};
+    document.getElementById('hp-value').textContent = `${stats.vidaAtual || 0}/${stats.vidaMax || 0}`;
+    document.getElementById('san-value').textContent = `${stats.sanidadeAtual || 0}/${stats.sanidadeMax || 0}`;
+    document.getElementById('est-value').textContent = `${stats.estaminaAtual || 0}/${stats.estaminaMax || 0}`;
+}
+
+// Update Status Buttons
+document.querySelectorAll('.btn-add, .btn-sub').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        const myFicha = fichas.find(f => f.id === loggedPlayerId);
+        if (!myFicha) return;
+        
+        const statName = e.target.getAttribute('data-stat');
+        const isAdd = e.target.classList.contains('btn-add');
+        
+        const currentStats = myFicha.status || {};
+        let atual = currentStats[`${statName}Atual`] || 0;
+        const max = currentStats[`${statName}Max`] || 0;
+        
+        if (isAdd) {
+            atual = Math.min(max, atual + 1);
+        } else {
+            atual = Math.max(0, atual - 1);
+        }
+        
+        try {
+            const fichaRef = doc(db, "fichas", loggedPlayerId);
+            await updateDoc(fichaRef, {
+                [`status.${statName}Atual`]: atual
+            });
+        } catch (error) {
+            console.error("Erro ao atualizar status:", error);
+        }
+    });
+});
+
+// Roll Attribute Buttons
+document.querySelectorAll('.btn-roll-attr').forEach(btn => {
+    btn.addEventListener('click', async (e) => {
+        const myFicha = fichas.find(f => f.id === loggedPlayerId);
+        if (!myFicha) return;
+        
+        const attrName = e.target.getAttribute('data-attr');
+        const attrValue = (myFicha.atributos && myFicha.atributos[attrName]) ? myFicha.atributos[attrName] : 0;
+        const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Jogador';
+        
+        const dadoResult = Math.floor(Math.random() * 20) + 1; // 1D20
+        const total = dadoResult + attrValue;
+        
+        try {
+            await addDoc(collection(db, "rolagens"), {
+                playerId: loggedPlayerId,
+                playerName: loggedPlayerName,
+                tipo: 'atributo',
+                atributo: attrName,
+                dadoResult: dadoResult,
+                attrValue: attrValue,
+                result: total,
+                timestamp: Date.now()
+            });
+        } catch (error) {
+            console.error("Erro ao rolar atributo:", error);
+        }
+    });
+});

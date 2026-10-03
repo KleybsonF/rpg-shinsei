@@ -203,6 +203,58 @@ textarea {
     accent-color: var(--accent-blue);
 }
 
+/* Status Styles */
+.status-section {
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.status-section h3 {
+    font-family: var(--font-heading);
+    color: var(--accent-blue);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+}
+
+.status-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.status-item {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.status-item label {
+    font-family: var(--font-heading);
+    color: var(--text-main);
+    font-size: 0.9rem;
+    text-transform: uppercase;
+}
+
+.status-inputs {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-inputs input[type="number"] {
+    width: 80px;
+    text-align: center;
+}
+
+.status-inputs span {
+    color: var(--text-muted);
+    font-size: 1.2rem;
+}
+
 /* Table Styles */
 .atributos-section {
     background-color: rgba(0, 0, 0, 0.2);

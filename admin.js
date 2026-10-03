@@ -190,6 +190,20 @@ elements.imageInput.addEventListener('change', async (e) => {
   }
 });
 
+// Image URL Input Handling
+elements.editImageUrl.addEventListener('input', (e) => {
+  const url = e.target.value.trim();
+  if (url) {
+    elements.imagePreview.src = url;
+    elements.imagePreview.style.display = 'block';
+    elements.uploadText.style.display = 'none';
+  } else {
+    elements.imagePreview.src = '';
+    elements.imagePreview.style.display = 'none';
+    elements.uploadText.style.display = 'block';
+  }
+});
+
 // Form Submission
 elements.editorForm.addEventListener('submit', async (e) => {
   e.preventDefault();

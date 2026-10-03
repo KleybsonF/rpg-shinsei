@@ -26,8 +26,16 @@ const listaFichas = document.getElementById('lista-fichas');
         resistencia: document.getElementById('attr-resistencia'),
         agilidade: document.getElementById('attr-agilidade'),
         carisma: document.getElementById('attr-carisma'),
-        intuicao: document.getElementById('attr-intuicao'),
-        estamina: document.getElementById('attr-estamina')
+        intuicao: document.getElementById('attr-intuicao')
+    };
+
+    const statusInputs = {
+        vidaAtual: document.getElementById('status-vida-atual'),
+        vidaMax: document.getElementById('status-vida-max'),
+        sanidadeAtual: document.getElementById('status-sanidade-atual'),
+        sanidadeMax: document.getElementById('status-sanidade-max'),
+        estaminaAtual: document.getElementById('status-estamina-atual'),
+        estaminaMax: document.getElementById('status-estamina-max')
     };
 
     let fichas = [];
@@ -94,6 +102,15 @@ const listaFichas = document.getElementById('lista-fichas');
             attrInputs[key].value = attrs[key] || 0;
         }
 
+        // Fill status
+        const stats = ficha.status || {};
+        statusInputs.vidaAtual.value = stats.vidaAtual || 0;
+        statusInputs.vidaMax.value = stats.vidaMax || 0;
+        statusInputs.sanidadeAtual.value = stats.sanidadeAtual || 0;
+        statusInputs.sanidadeMax.value = stats.sanidadeMax || 0;
+        statusInputs.estaminaAtual.value = stats.estaminaAtual || 0;
+        statusInputs.estaminaMax.value = stats.estaminaMax || 0;
+
         // Show editor
         fichaEditor.classList.remove('hidden');
         emptyState.classList.add('hidden');
@@ -119,6 +136,10 @@ const listaFichas = document.getElementById('lista-fichas');
         for (const key in attrInputs) {
             attrInputs[key].value = 0;
         }
+        
+        for (const key in statusInputs) {
+            statusInputs[key].value = 0;
+        }
 
         fichaEditor.classList.remove('hidden');
         emptyState.classList.add('hidden');
@@ -137,7 +158,15 @@ const listaFichas = document.getElementById('lista-fichas');
             isPlayer: inputIsPlayer.checked,
             login: inputIsPlayer.checked ? inputLogin.value.trim() : '',
             senha: inputIsPlayer.checked ? inputSenha.value : '',
-            atributos: {}
+            atributos: {},
+            status: {
+                vidaAtual: parseInt(statusInputs.vidaAtual.value) || 0,
+                vidaMax: parseInt(statusInputs.vidaMax.value) || 0,
+                sanidadeAtual: parseInt(statusInputs.sanidadeAtual.value) || 0,
+                sanidadeMax: parseInt(statusInputs.sanidadeMax.value) || 0,
+                estaminaAtual: parseInt(statusInputs.estaminaAtual.value) || 0,
+                estaminaMax: parseInt(statusInputs.estaminaMax.value) || 0
+            }
         };
 
         for (const key in attrInputs) {

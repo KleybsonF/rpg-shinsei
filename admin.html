@@ -77,13 +77,13 @@
           </div>
           
           <div class="form-group">
-            <label>Imagem 1:1</label>
+            <label>Imagem 1:1 (Upload ou URL)</label>
             <div class="image-upload" id="image-upload-box">
               <img id="image-preview" src="" style="display:none;">
               <span id="upload-text">Clique ou arraste uma foto 1:1 aqui</span>
               <input type="file" id="image-input" accept="image/*">
             </div>
-            <input type="hidden" id="edit-image-url">
+            <input type="text" id="edit-image-url" placeholder="Ou cole a URL da imagem aqui..." style="margin-top: 10px; width: 100%; padding: 0.75rem; border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 6px; background: rgba(0, 0, 0, 0.5); color: #fff;">
           </div>
           
           <button type="submit" class="btn-save">Salvar Alterações</button>

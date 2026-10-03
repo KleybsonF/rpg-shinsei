@@ -28,6 +28,45 @@
         </div>
     </div>
 
+    <!-- Painel do Jogador Atual (controles pessoais) -->
+    <div id="player-panel" class="player-panel hidden">
+        <h3 id="current-player-name">Meu Personagem</h3>
+        
+        <div class="player-status-bar">
+            <div class="status-bar-item hp">
+                <span class="label">VIDA</span>
+                <button class="btn-sub" data-stat="vida">-</button>
+                <span class="value" id="hp-value">0/0</span>
+                <button class="btn-add" data-stat="vida">+</button>
+            </div>
+            <div class="status-bar-item san">
+                <span class="label">SAN</span>
+                <button class="btn-sub" data-stat="sanidade">-</button>
+                <span class="value" id="san-value">0/0</span>
+                <button class="btn-add" data-stat="sanidade">+</button>
+            </div>
+            <div class="status-bar-item est">
+                <span class="label">EST</span>
+                <button class="btn-sub" data-stat="estamina">-</button>
+                <span class="value" id="est-value">0/0</span>
+                <button class="btn-add" data-stat="estamina">+</button>
+            </div>
+        </div>
+
+        <div class="player-rolls">
+            <h4>Rolagens (1D20 + Atributo)</h4>
+            <div class="rolls-grid">
+                <button class="btn-roll-attr" data-attr="forca">Força</button>
+                <button class="btn-roll-attr" data-attr="destreza">Destreza</button>
+                <button class="btn-roll-attr" data-attr="mira">Mira</button>
+                <button class="btn-roll-attr" data-attr="resistencia">Resist</button>
+                <button class="btn-roll-attr" data-attr="agilidade">Agilidade</button>
+                <button class="btn-roll-attr" data-attr="carisma">Carisma</button>
+                <button class="btn-roll-attr" data-attr="intuicao">Intuição</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal de Informações do Personagem -->
     <div id="player-modal" class="modal hidden">
         <div class="modal-content">
