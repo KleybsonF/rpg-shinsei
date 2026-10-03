@@ -121,7 +121,6 @@ const modal = document.getElementById('player-modal');
         const attrsList = document.getElementById('modal-atributos');
         attrsList.innerHTML = '';
         
-        const attrs = ficha.atributos || {};
         const attrNames = ['forca', 'destreza', 'mira', 'resistencia', 'agilidade', 'carisma', 'intuicao', 'estamina'];
         
         attrNames.forEach(attr => {
