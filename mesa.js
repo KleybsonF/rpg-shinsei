@@ -19,7 +19,14 @@ const modal = document.getElementById('player-modal');
         onSnapshot(q, (querySnapshot) => {
             fichas = [];
             querySnapshot.forEach((doc) => {
-                fichas.push({ id: doc.id, ...doc.data() });
+                const data = doc.data();
+                const nomeFicha = data.nome || '';
+                const loginFicha = data.login || '';
+                const isMasterData = (loginFicha.toLowerCase() === 'mestre' || nomeFicha.toLowerCase() === 'mestre' || data.isMaster === true);
+                
+                if (!isMasterData) {
+                    fichas.push({ id: doc.id, ...data });
+                }
             });
             fichas = fichas.slice(0, 8); // Max 8 players
             renderPlayers();
