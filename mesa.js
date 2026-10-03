@@ -41,10 +41,8 @@ const modal = document.getElementById('player-modal');
         
         const count = visiblePlayers.length;
         if (count === 0) {
-            document.querySelector('.mesa-status').textContent = 'Nenhum jogador encontrado.';
+            playersRing.innerHTML = '<div style="color:var(--text-muted); font-family:var(--font-heading);">Nenhum jogador ativo.</div>';
             return;
-        } else {
-            document.querySelector('.mesa-status').textContent = 'Sessão Ativa';
         }
 
         visiblePlayers.forEach((ficha, index) => {
