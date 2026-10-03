@@ -43,11 +43,17 @@ const listaFichas = document.getElementById('lista-fichas');
 
     // Load Fichas
     async function loadFichas() {
+        const loggedPlayerId = sessionStorage.getItem('loggedPlayerId');
+        const isMaster = sessionStorage.getItem('isMaster') === 'true';
+
         try {
             const querySnapshot = await getDocs(collection(db, "fichas"));
             fichas = [];
             querySnapshot.forEach((docSnap) => {
-                fichas.push({ id: docSnap.id, ...docSnap.data() });
+                const data = docSnap.data();
+                if (isMaster || docSnap.id === loggedPlayerId) {
+                    fichas.push({ id: docSnap.id, ...data });
+                }
             });
             renderFichasList();
         } catch (error) {

@@ -41,19 +41,9 @@ const modal = document.getElementById('player-modal');
         }
 
         fichas.forEach((ficha, index) => {
-            const angle = (index / count) * (2 * Math.PI) - (Math.PI / 2); // Start at top
-            
-            // X and Y in percentages (0 to 100)
-            const rx = 45; // horizontal radius in % (a bit smaller than container)
-            const ry = 45; // vertical radius in %
-            
-            const x = 50 + rx * Math.cos(angle);
-            const y = 50 + ry * Math.sin(angle);
-
             const slot = document.createElement('div');
             slot.className = 'player-slot';
-            slot.style.left = `${x}%`;
-            slot.style.top = `${y}%`;
+            // Posição será gerenciada puramente pelo Flexbox no CSS
 
             // If there's no photo, use a placeholder with initials
             const nomeStr = ficha.nome || '?';
@@ -72,6 +62,12 @@ const modal = document.getElementById('player-modal');
     }
 
     function openModal(ficha, fotoUrl) {
+        const isMaster = sessionStorage.getItem('isMaster') === 'true';
+        if (!isMaster && ficha.id !== loggedPlayerId) {
+            alert("Você só tem permissão para visualizar sua própria Ficha e Lore.");
+            return;
+        }
+
         document.getElementById('modal-foto').src = fotoUrl;
         document.getElementById('modal-nome').textContent = ficha.nome || 'Sem Nome';
         document.getElementById('modal-historia').textContent = ficha.historia || 'Nenhuma história definida.';
