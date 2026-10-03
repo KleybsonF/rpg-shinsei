@@ -395,6 +395,29 @@ const damageTable = {
     10: { normal: 245, crit: 490 }
 };
 
+const critModal = document.getElementById('crit-modal');
+const btnCritNormal = document.getElementById('btn-crit-normal');
+const btnCritCritico = document.getElementById('btn-crit-critico');
+const critModalMsg = document.getElementById('crit-modal-msg');
+
+function askCritPrompt(msg) {
+    return new Promise((resolve) => {
+        critModalMsg.textContent = msg;
+        critModal.classList.remove('hidden');
+        
+        const handleNormal = () => { cleanup(); resolve(false); };
+        const handleCrit = () => { cleanup(); resolve(true); };
+        const cleanup = () => {
+            critModal.classList.add('hidden');
+            btnCritNormal.removeEventListener('click', handleNormal);
+            btnCritCritico.removeEventListener('click', handleCrit);
+        };
+        
+        btnCritNormal.addEventListener('click', handleNormal);
+        btnCritCritico.addEventListener('click', handleCrit);
+    });
+}
+
 const btnDanoFisico = document.getElementById('btn-dano-fisico');
 if (btnDanoFisico) {
     btnDanoFisico.addEventListener('click', async () => {
@@ -409,7 +432,7 @@ if (btnDanoFisico) {
         if (tier < 1) tier = 1;
         if (tier > 10) tier = 10;
         
-        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (20 no dado)?");
+        const isCrit = await askCritPrompt("O ataque de Dano Físico foi um ACERTO CRÍTICO (20 no dado)?");
         const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
@@ -440,7 +463,7 @@ if (btnDanoMira) {
         if (tier < 1) tier = 1;
         if (tier > 10) tier = 10;
         
-        const isCrit = confirm("O ataque foi um ACERTO CRÍTICO (19 ou 20 no dado)?");
+        const isCrit = await askCritPrompt("O ataque de Dano Mira foi um ACERTO CRÍTICO (19 ou 20 no dado)?");
         const dano = isCrit ? damageTable[tier].crit : damageTable[tier].normal;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         

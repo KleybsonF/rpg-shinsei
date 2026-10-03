@@ -116,6 +116,24 @@
         </div>
     </div>
 
+    <!-- Modal de Rolagem de Dano -->
+    <div id="crit-modal" class="modal hidden" style="z-index: 200;">
+        <div class="modal-content" style="max-width: 450px; text-align: center;">
+            <div class="modal-header">
+                <div class="modal-header-info">
+                    <h2 style="margin: 0; color: #ff3366;">Tipo de Dano</h2>
+                </div>
+            </div>
+            <div class="modal-body" style="padding-top: 20px;">
+                <p id="crit-modal-msg" style="margin-bottom: 30px; font-size: 1.1rem; color: var(--text-color);">O ataque foi um Acerto Crítico?</p>
+                <div style="display: flex; gap: 20px; justify-content: center;">
+                    <button id="btn-crit-normal" class="btn-success" style="background-color: var(--accent-blue); padding: 12px 25px;">Dano Normal</button>
+                    <button id="btn-crit-critico" class="btn-roll-dano" style="background-color: #ff3366; color: #000; box-shadow: 0 0 15px rgba(255,51,102,0.5); padding: 12px 25px;">ACERTO CRÍTICO!</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="mesa.js"></script>
 </body>
 </html>
