@@ -48,14 +48,9 @@ const listaFichas = document.getElementById('lista-fichas');
         try {
             const querySnapshot = await getDocs(collection(db, "fichas"));
             
-            // Segurança: Se não está logado e já existem fichas, redireciona pro login
-            if (!querySnapshot.empty && !loggedPlayerId && !isMaster) {
-                alert("Você não está logado! Redirecionando para a tela de login para validar suas permissões...");
-                window.location.href = "login.html";
-                return;
-            }
-
             fichas = [];
+            
+            // Se o banco for vazio, ou se for mestre/dono, lista. Caso contrário, deixa a lista vazia (mas permite criar novas)
             querySnapshot.forEach((docSnap) => {
                 const data = docSnap.data();
                 if (isMaster || docSnap.id === loggedPlayerId || (!loggedPlayerId && querySnapshot.empty)) {
