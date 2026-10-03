@@ -9,6 +9,11 @@
 </head>
 <body>
     <div class="mesa-container">
+        <!-- Anel de Jogadores (Agora no Topo) -->
+        <div class="players-ring" id="players-ring">
+            <!-- Jogadores serão renderizados aqui via JS -->
+        </div>
+
         <!-- Mesa Central -->
         <div class="mesa-central">
             <h2>MESA CENTRAL</h2>
@@ -25,18 +30,13 @@
             <div class="spotify-panel" id="spotify-panel">
                 <h4>🎵 Spotify Jam / Playlist</h4>
                 <div class="spotify-controls">
-                    <input type="text" id="spotify-link-input" placeholder="Cole o link do Spotify aqui...">
                     <button id="btn-sync-spotify" class="btn-success">Sincronizar</button>
+                    <input type="text" id="spotify-link-input" placeholder="Cole o link do Spotify aqui...">
                 </div>
                 <div id="spotify-embed-container">
                     <!-- O iframe do Spotify será renderizado aqui -->
                 </div>
             </div>
-        </div>
-        
-        <!-- Anel de Jogadores -->
-        <div class="players-ring" id="players-ring">
-            <!-- Jogadores serão renderizados aqui via JS -->
         </div>
     </div>
 
