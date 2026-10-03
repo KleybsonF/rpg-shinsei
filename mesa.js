@@ -50,8 +50,9 @@ const modal = document.getElementById('player-modal');
             const inicial = nomeStr.charAt(0).toUpperCase();
             const fotoUrl = ficha.foto || `https://ui-avatars.com/api/?name=${inicial}&background=151520&color=00d2ff&size=128&font-size=0.5&bold=true`;
 
+            // Se a imagem falhar em carregar (ex: URL inválida), usa o placeholder gerado
             slot.innerHTML = `
-                <img src="${fotoUrl}" alt="${ficha.nome}" class="player-foto">
+                <img src="${fotoUrl}" alt="${ficha.nome}" class="player-foto" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${inicial}&background=151520&color=00d2ff&size=128&font-size=0.5&bold=true';">
                 <div class="player-nome">${ficha.nome || 'Sem Nome'}</div>
             `;
 
