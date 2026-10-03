@@ -57,10 +57,20 @@ const modal = document.getElementById('player-modal');
             const inicial = nomeStr.charAt(0).toUpperCase();
             const fotoUrl = ficha.foto || `https://ui-avatars.com/api/?name=${inicial}&background=151520&color=00d2ff&size=128&font-size=0.5&bold=true`;
 
+            const stats = ficha.status || {};
+            const hpAtual = stats.vidaAtual || 0;
+            const hpMax = stats.vidaMax || 0;
+            const estAtual = stats.estaminaAtual || 0;
+            const estMax = stats.estaminaMax || 0;
+
             // Se a imagem falhar em carregar (ex: URL inválida), usa o placeholder gerado
             slot.innerHTML = `
                 <img src="${fotoUrl}" alt="${ficha.nome}" class="player-foto" onerror="this.onerror=null;this.src='https://ui-avatars.com/api/?name=${inicial}&background=151520&color=00d2ff&size=128&font-size=0.5&bold=true';">
                 <div class="player-nome">${ficha.nome || 'Sem Nome'}</div>
+                <div class="player-mini-status">
+                    <span style="color: #ff3366; font-size: 0.8rem; font-weight: bold;">HP: ${hpAtual}/${hpMax}</span>
+                    <span style="color: #00d2ff; font-size: 0.8rem; font-weight: bold;">EST: ${estAtual}/${estMax}</span>
+                </div>
             `;
 
             slot.addEventListener('click', () => openModal(ficha, fotoUrl));
@@ -87,7 +97,6 @@ const modal = document.getElementById('player-modal');
         
         const statNames = [
             { label: 'Vida', current: stats.vidaAtual, max: stats.vidaMax },
-            { label: 'Sanidade', current: stats.sanidadeAtual, max: stats.sanidadeMax },
             { label: 'Estamina', current: stats.estaminaAtual, max: stats.estaminaMax }
         ];
         
@@ -205,7 +214,6 @@ function updatePlayerPanel() {
     
     const stats = myFicha.status || {};
     document.getElementById('hp-value').textContent = `${stats.vidaAtual || 0}/${stats.vidaMax || 0}`;
-    document.getElementById('san-value').textContent = `${stats.sanidadeAtual || 0}/${stats.sanidadeMax || 0}`;
     document.getElementById('est-value').textContent = `${stats.estaminaAtual || 0}/${stats.estaminaMax || 0}`;
 }
 

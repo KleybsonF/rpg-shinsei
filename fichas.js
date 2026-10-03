@@ -33,8 +33,6 @@ const listaFichas = document.getElementById('lista-fichas');
     const statusInputs = {
         vidaAtual: document.getElementById('status-vida-atual'),
         vidaMax: document.getElementById('status-vida-max'),
-        sanidadeAtual: document.getElementById('status-sanidade-atual'),
-        sanidadeMax: document.getElementById('status-sanidade-max'),
         estaminaAtual: document.getElementById('status-estamina-atual'),
         estaminaMax: document.getElementById('status-estamina-max')
     };
@@ -116,8 +114,6 @@ const listaFichas = document.getElementById('lista-fichas');
         const stats = ficha.status || {};
         statusInputs.vidaAtual.value = stats.vidaAtual || 0;
         statusInputs.vidaMax.value = stats.vidaMax || 0;
-        statusInputs.sanidadeAtual.value = stats.sanidadeAtual || 0;
-        statusInputs.sanidadeMax.value = stats.sanidadeMax || 0;
         statusInputs.estaminaAtual.value = stats.estaminaAtual || 0;
         statusInputs.estaminaMax.value = stats.estaminaMax || 0;
 
@@ -174,8 +170,6 @@ const listaFichas = document.getElementById('lista-fichas');
             status: {
                 vidaAtual: parseInt(statusInputs.vidaAtual.value) || 0,
                 vidaMax: parseInt(statusInputs.vidaMax.value) || 0,
-                sanidadeAtual: parseInt(statusInputs.sanidadeAtual.value) || 0,
-                sanidadeMax: parseInt(statusInputs.sanidadeMax.value) || 0,
                 estaminaAtual: parseInt(statusInputs.estaminaAtual.value) || 0,
                 estaminaMax: parseInt(statusInputs.estaminaMax.value) || 0
             }
