@@ -142,10 +142,19 @@ const modal = document.getElementById('player-modal');
                 const div = document.createElement('div');
                 div.className = 'dice-log-item';
                 if (data.tipo === 'atributo') {
-                    div.innerHTML = `
-                        <span class="log-player">${data.playerName}</span> rolou 1D20 para <b>${data.atributo.toUpperCase()}</b>:
-                        (Dado: ${data.dadoResult} + Atributo: ${data.attrValue}) = <span class="log-result">${data.result}</span>
-                    `;
+                    // Compatibilidade com rolagens antigas (sem data.desc)
+                    if (!data.desc) {
+                        div.innerHTML = `
+                            <span class="log-player">${data.playerName}</span> rolou 1D20 para <b>${data.atributo.toUpperCase()}</b>:
+                            (Dado: ${data.dadoResult} + Atributo: ${data.attrValue}) = <span class="log-result">${data.result}</span>
+                        `;
+                    } else {
+                        div.innerHTML = `
+                            <span class="log-player">${data.playerName}</span> fez um teste de <b>${data.atributo.toUpperCase()}</b> (Nv. ${data.attrValue}):
+                            <br><small style="color:var(--text-muted)">Rolagem: ${data.desc} (Máx ${data.max})</small>
+                            <br>Resultado: ${data.expression} = <span class="log-result">${data.result}</span>
+                        `;
+                    }
                 } else {
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> rolou a moeda e tirou: 
@@ -210,6 +219,61 @@ document.querySelectorAll('.btn-add, .btn-sub').forEach(btn => {
     });
 });
 
+// Helpers para rolagens de atributo
+function calculateAttributeRoll(attrValue) {
+    let d1 = 20, d2 = 0, type = 0; // 0 = 1d20, 1 = 1d20+1d20, 2 = 1dX * (1+1dY)
+    let max = 20;
+
+    if (attrValue < 5) { type = 0; d1 = 20; max = 20; }
+    else if (attrValue < 10) { type = 1; d1 = 20; d2 = 20; max = 40; }
+    else if (attrValue < 15) { type = 2; d1 = 20; d2 = 2; max = 60; }
+    else if (attrValue < 20) { type = 2; d1 = 20; d2 = 3; max = 80; }
+    else if (attrValue < 25) { type = 2; d1 = 20; d2 = 4; max = 100; }
+    else if (attrValue < 30) { type = 2; d1 = 20; d2 = 5; max = 120; }
+    else if (attrValue < 35) { type = 2; d1 = 20; d2 = 6; max = 140; }
+    else if (attrValue < 40) { type = 2; d1 = 20; d2 = 8; max = 180; }
+    else if (attrValue < 45) { type = 2; d1 = 20; d2 = 10; max = 220; }
+    else if (attrValue < 50) { type = 2; d1 = 23; d2 = 10; max = 253; }
+    else if (attrValue < 55) { type = 2; d1 = 23; d2 = 11; max = 276; }
+    else if (attrValue < 60) { type = 2; d1 = 25; d2 = 11; max = 300; }
+    else if (attrValue < 65) { type = 2; d1 = 25; d2 = 12; max = 325; }
+    else if (attrValue < 70) { type = 2; d1 = 27; d2 = 12; max = 351; }
+    else if (attrValue < 75) { type = 2; d1 = 27; d2 = 13; max = 378; }
+    else if (attrValue < 80) { type = 2; d1 = 30; d2 = 13; max = 420; }
+    else if (attrValue < 85) { type = 2; d1 = 30; d2 = 14; max = 450; }
+    else if (attrValue < 90) { type = 2; d1 = 33; d2 = 14; max = 495; }
+    else if (attrValue < 95) { type = 2; d1 = 33; d2 = 15; max = 528; }
+    else if (attrValue < 100) { type = 2; d1 = 35; d2 = 15; max = 560; }
+    else { type = 2; d1 = 35; d2 = 16; max = 595; }
+
+    let roll1 = Math.floor(Math.random() * d1) + 1;
+    let roll2 = d2 > 0 ? Math.floor(Math.random() * d2) + 1 : 0;
+    
+    let result = 0;
+    let expression = "";
+    let desc = "";
+
+    if (type === 0) {
+        result = roll1;
+        expression = `[${roll1}]`;
+        desc = `1D${d1}`;
+    } else if (type === 1) {
+        result = roll1 + roll2;
+        expression = `[${roll1} + ${roll2}]`;
+        desc = `1D${d1} + 1D${d2}`;
+    } else {
+        result = roll1 * (1 + roll2);
+        expression = `[${roll1} × (1 + ${roll2})]`;
+        desc = `1D${d1} × (1 + 1D${d2})`;
+    }
+
+    // Se quiser somar o valor base do atributo ao final:
+    // O usuário disse apenas: "A cada 5 niveis eles devem ter um upgrade nos seus dados seguindo essa tabela"
+    // Vou assumir que o resultado final é apenas a rolagem estipulada pela tabela.
+
+    return { result, expression, desc, max };
+}
+
 // Roll Attribute Buttons
 document.querySelectorAll('.btn-roll-attr').forEach(btn => {
     btn.addEventListener('click', async (e) => {
@@ -220,8 +284,8 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
         const attrValue = (myFicha.atributos && myFicha.atributos[attrName]) ? myFicha.atributos[attrName] : 0;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Jogador';
         
-        const dadoResult = Math.floor(Math.random() * 20) + 1; // 1D20
-        const total = dadoResult + attrValue;
+        // Se for um dos atributos da nova regra, usa a nova rolagem, se não, usamos o padrão (aplicarei para todos por padrão)
+        const rollData = calculateAttributeRoll(attrValue);
         
         try {
             await addDoc(collection(db, "rolagens"), {
@@ -229,9 +293,11 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
                 playerName: loggedPlayerName,
                 tipo: 'atributo',
                 atributo: attrName,
-                dadoResult: dadoResult,
                 attrValue: attrValue,
-                result: total,
+                result: rollData.result,
+                expression: rollData.expression,
+                desc: rollData.desc,
+                max: rollData.max,
                 timestamp: Date.now()
             });
         } catch (error) {
