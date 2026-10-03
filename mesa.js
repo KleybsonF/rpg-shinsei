@@ -198,14 +198,12 @@ const modal = document.getElementById('player-modal');
                 } else if (data.tipo === 'dano_fisico') {
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> causou <b>Dano Físico</b> (Nível ${data.tier}):<br>
-                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO (×2)!</span><br>' : ''}
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
                 } else if (data.tipo === 'dano_mira') {
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Nível ${data.tier}):<br>
-                        ${data.isCrit ? '<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO (×2)!</span><br>' : ''}
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
@@ -384,29 +382,6 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
 });
 
 // Lógica de Dano
-const critModal = document.getElementById('crit-modal');
-const btnCritNormal = document.getElementById('btn-crit-normal');
-const btnCritCritico = document.getElementById('btn-crit-critico');
-const critModalMsg = document.getElementById('crit-modal-msg');
-
-function askCritPrompt(msg) {
-    return new Promise((resolve) => {
-        critModalMsg.textContent = msg;
-        critModal.classList.remove('hidden');
-        
-        const handleNormal = () => { cleanup(); resolve(false); };
-        const handleCrit = () => { cleanup(); resolve(true); };
-        const cleanup = () => {
-            critModal.classList.add('hidden');
-            btnCritNormal.removeEventListener('click', handleNormal);
-            btnCritCritico.removeEventListener('click', handleCrit);
-        };
-        
-        btnCritNormal.addEventListener('click', handleNormal);
-        btnCritCritico.addEventListener('click', handleCrit);
-    });
-}
-
 const btnDanoFisico = document.getElementById('btn-dano-fisico');
 if (btnDanoFisico) {
     btnDanoFisico.addEventListener('click', async () => {
@@ -420,13 +395,7 @@ if (btnDanoFisico) {
         let nivel = Math.floor((forca * 2) + (destreza / 3));
         if (nivel < 0) nivel = 0;
         
-        const isCrit = await askCritPrompt("O ataque de Dano Físico foi um ACERTO CRÍTICO (20 no dado)?");
         let rollData = calculateAttributeRoll(nivel);
-        if (isCrit) {
-            rollData.result *= 2;
-            rollData.expression = `(${rollData.expression}) × 2`;
-        }
-        
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
         try {
@@ -435,7 +404,6 @@ if (btnDanoFisico) {
                 playerName: loggedPlayerName,
                 tipo: 'dano_fisico',
                 tier: nivel,
-                isCrit: isCrit,
                 expression: rollData.expression,
                 result: rollData.result,
                 timestamp: Date.now()
@@ -456,13 +424,7 @@ if (btnDanoMira) {
         let nivel = parseInt(attrs.armaNivel) || 0;
         if (nivel < 0) nivel = 0;
         
-        const isCrit = await askCritPrompt("O ataque de Dano Mira foi um ACERTO CRÍTICO (19 ou 20 no dado)?");
         let rollData = calculateAttributeRoll(nivel);
-        if (isCrit) {
-            rollData.result *= 2;
-            rollData.expression = `(${rollData.expression}) × 2`;
-        }
-        
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Desconhecido';
         
         try {
@@ -471,7 +433,6 @@ if (btnDanoMira) {
                 playerName: loggedPlayerName,
                 tipo: 'dano_mira',
                 tier: nivel,
-                isCrit: isCrit,
                 expression: rollData.expression,
                 result: rollData.result,
                 timestamp: Date.now()
