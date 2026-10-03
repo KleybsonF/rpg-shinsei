@@ -320,107 +320,58 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
     });
 });
 
-// P2P Audio Radio (WebRTC / PeerJS)
-// O Mestre cria um Peer com um ID fixo baseado num "tableId". Vamos usar um fixo por enquanto.
-const TABLE_RADIO_ID = 'rpg-shinsei-radio-room-1';
-let peer = null;
-let currentCall = null;
-let localStream = null;
+// Spotify Jam Sync
+const btnSyncSpotify = document.getElementById('btn-sync-spotify');
+const inputSpotifyLink = document.getElementById('spotify-link-input');
+const spotifyEmbedContainer = document.getElementById('spotify-embed-container');
 
-const btnStartRadio = document.getElementById('btn-start-radio');
-const btnListenRadio = document.getElementById('btn-listen-radio');
-const radioStatus = document.getElementById('radio-status');
-const radioPlayer = document.getElementById('radio-player');
-
-if (btnStartRadio && btnListenRadio) {
-    // Modo Transmissor (Mestre)
-    btnStartRadio.addEventListener('click', async () => {
-        try {
-            // Pede captura de tela com áudio (no Windows/Chrome permite capturar áudio do sistema ou guia)
-            localStream = await navigator.mediaDevices.getDisplayMedia({ 
-                video: true, 
-                audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
-            });
-            
-            // Inicia o Peer do mestre
-            peer = new Peer(TABLE_RADIO_ID);
-            
-            peer.on('open', (id) => {
-                radioStatus.textContent = 'Transmissão ATIVA. Aguardando ouvintes...';
-                radioStatus.style.color = '#00ff88';
-                btnStartRadio.disabled = true;
-            });
-
-            // Quando um jogador ligar para o rádio, atende com o stream local
-            peer.on('call', (call) => {
-                call.answer(localStream);
-                console.log('Novo ouvinte conectado ao rádio.');
-            });
-
-            peer.on('error', (err) => {
-                console.error(err);
-                radioStatus.textContent = 'Erro ao criar rádio: ' + err.type;
-                radioStatus.style.color = 'red';
-            });
-
-        } catch (err) {
-            console.error('Erro ao capturar áudio:', err);
-            radioStatus.textContent = 'Permissão negada ou erro na captura.';
-            radioStatus.style.color = 'red';
+if (btnSyncSpotify && inputSpotifyLink) {
+    btnSyncSpotify.addEventListener('click', async () => {
+        const url = inputSpotifyLink.value.trim();
+        if (!url) return;
+        
+        let embedUrl = url;
+        // Se for um link comum do spotify (ex: https://open.spotify.com/playlist/...) converte para embed
+        if (url.includes('open.spotify.com') && !url.includes('/embed/')) {
+            embedUrl = url.replace('open.spotify.com/', 'open.spotify.com/embed/');
+            // Remove queries se existirem
+            embedUrl = embedUrl.split('?')[0];
         }
-    });
 
-    // Modo Ouvinte (Jogadores)
-    function connectToRadio() {
-        // Cria um stream de áudio vazio/fantasma para o PeerJS não travar a conexão
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const dest = ctx.createMediaStreamDestination();
-        const dummyStream = dest.stream;
-
-        // Liga para o ID fixo do rádio
-        const call = peer.call(TABLE_RADIO_ID, dummyStream); 
-        
-        call.on('stream', (remoteStream) => {
-            radioPlayer.srcObject = remoteStream;
-            radioStatus.textContent = '📻 Sintonizado no rádio da mesa!';
-            radioStatus.style.color = '#00d2ff';
-            btnListenRadio.disabled = true;
-        });
-
-        call.on('error', (err) => {
-            console.error('Erro na chamada:', err);
-            radioStatus.textContent = 'Erro ao conectar. O rádio está online?';
-            radioStatus.style.color = 'red';
-        });
-        
-        call.on('close', () => {
-            radioStatus.textContent = 'Transmissão encerrada.';
-            radioStatus.style.color = 'gray';
-            btnListenRadio.disabled = false;
-        });
-        
-        currentCall = call;
-    }
-
-    btnListenRadio.addEventListener('click', () => {
-        radioStatus.textContent = 'Conectando ao rádio...';
-        
-        if (!peer) {
-            peer = new Peer(); // Peer genérico para o jogador
-            
-            peer.on('open', () => {
-                connectToRadio();
+        try {
+            const radioRef = doc(db, "system", "spotify-jam");
+            await updateDoc(radioRef, {
+                url: embedUrl,
+                updatedAt: Date.now()
             });
-
-            peer.on('error', (err) => {
-                console.error(err);
-                radioStatus.textContent = 'Erro de conexão ou Rádio offline.';
-                radioStatus.style.color = 'red';
-                peer = null;
-            });
-        } else {
-            // Se já estava conectado à rede P2P, só faz a chamada
-            connectToRadio();
+            inputSpotifyLink.value = '';
+        } catch (error) {
+            console.error("Erro ao sincronizar spotify:", error);
+            // Se o doc não existir, tenta criar
+            try {
+                const { setDoc } = await import('./firebase.js');
+                await setDoc(doc(db, "system", "spotify-jam"), {
+                    url: embedUrl,
+                    updatedAt: Date.now()
+                });
+                inputSpotifyLink.value = '';
+            } catch (err) {
+                console.error("Erro final ao criar spotify jam doc", err);
+            }
         }
     });
 }
+
+// Escuta atualizações do Spotify Jam
+function listenSpotifyJam() {
+    const radioRef = doc(db, "system", "spotify-jam");
+    onSnapshot(radioRef, (docSnap) => {
+        if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.url && spotifyEmbedContainer) {
+                spotifyEmbedContainer.innerHTML = `<iframe style="border-radius:12px" src="${data.url}?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>`;
+            }
+        }
+    });
+}
+listenSpotifyJam();
