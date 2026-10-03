@@ -458,14 +458,12 @@ if (btnDanoMira) {
         if (!myFicha) return;
         
         const attrs = myFicha.atributos || {};
-        const temArma = attrs.armaEquipada;
-        if (!temArma) {
-            alert("Você está desarmado! Vá na aba de Fichas e marque a opção 'Tem Arma?' para poder rolar dano com arma.");
+
+        let nivel = parseInt(attrs.armaNivel);
+        if (isNaN(nivel) || nivel < 0) {
+            alert("Você está desarmado! Vá na aba de Fichas e selecione um Ranking de arma para poder atirar.");
             return;
         }
-
-        let nivel = parseInt(attrs.armaNivel) || 0;
-        if (nivel < 0) nivel = 0;
         
         let acerto = Math.floor(Math.random() * 20) + 1;
         let multiplicador = 1;
