@@ -12,9 +12,9 @@ const listaFichas = document.getElementById('lista-fichas');
     // Inputs
     const inputNome = document.getElementById('ficha-nome');
     const inputFoto = document.getElementById('ficha-foto');
-    const inputHistoria = document.getElementById('ficha-historia');
     const inputInventario = document.getElementById('ficha-inventario');
     const inputIsPlayer = document.getElementById('ficha-is-player');
+    const inputIsMaster = document.getElementById('ficha-is-master');
     const loginFields = document.getElementById('login-fields');
     const inputLogin = document.getElementById('ficha-login');
     const inputSenha = document.getElementById('ficha-senha');
@@ -100,10 +100,11 @@ const listaFichas = document.getElementById('lista-fichas');
         inputHistoria.value = ficha.historia || '';
         inputInventario.value = ficha.inventario || '';
         inputIsPlayer.checked = ficha.isPlayer || false;
+        inputIsMaster.checked = ficha.isMaster || false;
         inputLogin.value = ficha.login || '';
         inputSenha.value = ficha.senha || '';
 
-        if (inputIsPlayer.checked) {
+        if (inputIsPlayer.checked || inputIsMaster.checked) {
             loginFields.classList.remove('hidden');
         } else {
             loginFields.classList.add('hidden');
@@ -142,6 +143,7 @@ const listaFichas = document.getElementById('lista-fichas');
         inputHistoria.value = '';
         inputInventario.value = '';
         inputIsPlayer.checked = false;
+        inputIsMaster.checked = false;
         inputLogin.value = '';
         inputSenha.value = '';
         loginFields.classList.add('hidden');
@@ -169,8 +171,9 @@ const listaFichas = document.getElementById('lista-fichas');
             historia: inputHistoria.value.trim(),
             inventario: inputInventario.value.trim(),
             isPlayer: inputIsPlayer.checked,
-            login: inputIsPlayer.checked ? inputLogin.value.trim() : '',
-            senha: inputIsPlayer.checked ? inputSenha.value : '',
+            isMaster: inputIsMaster.checked,
+            login: (inputIsPlayer.checked || inputIsMaster.checked) ? inputLogin.value.trim() : '',
+            senha: (inputIsPlayer.checked || inputIsMaster.checked) ? inputSenha.value : '',
             atributos: {},
             status: {
                 vidaAtual: parseInt(statusInputs.vidaAtual.value) || 0,
@@ -240,13 +243,16 @@ const listaFichas = document.getElementById('lista-fichas');
     btnSalvar.addEventListener('click', saveFicha);
     btnExcluir.addEventListener('click', deleteFicha);
     
-    inputIsPlayer.addEventListener('change', (e) => {
-        if (e.target.checked) {
+    function toggleLoginFields() {
+        if (inputIsPlayer.checked || inputIsMaster.checked) {
             loginFields.classList.remove('hidden');
         } else {
             loginFields.classList.add('hidden');
         }
-    });
+    }
+    
+    inputIsPlayer.addEventListener('change', toggleLoginFields);
+    inputIsMaster.addEventListener('change', toggleLoginFields);
 
 // Initial Load
 loadFichas();
