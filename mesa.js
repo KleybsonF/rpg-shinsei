@@ -24,9 +24,7 @@ const modal = document.getElementById('player-modal');
                 const loginFicha = data.login || '';
                 const isMasterData = (loginFicha.toLowerCase() === 'mestre' || nomeFicha.toLowerCase() === 'mestre' || data.isMaster === true);
                 
-                if (!isMasterData) {
-                    fichas.push({ id: doc.id, ...data });
-                }
+                fichas.push({ id: doc.id, isMasterData: isMasterData, ...data });
             });
             fichas = fichas.slice(0, 8); // Max 8 players
             renderPlayers();
@@ -39,7 +37,9 @@ const modal = document.getElementById('player-modal');
     // Position players in an oval/circle around the table
     function renderPlayers() {
         playersRing.innerHTML = '';
-        const count = fichas.length;
+        const visiblePlayers = fichas.filter(f => !f.isMasterData);
+        
+        const count = visiblePlayers.length;
         if (count === 0) {
             document.querySelector('.mesa-status').textContent = 'Nenhum jogador encontrado.';
             return;
@@ -47,7 +47,7 @@ const modal = document.getElementById('player-modal');
             document.querySelector('.mesa-status').textContent = 'Sessão Ativa';
         }
 
-        fichas.forEach((ficha, index) => {
+        visiblePlayers.forEach((ficha, index) => {
             const slot = document.createElement('div');
             slot.className = 'player-slot';
             // Posição será gerenciada puramente pelo Flexbox no CSS
