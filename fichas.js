@@ -27,7 +27,8 @@ const listaFichas = document.getElementById('lista-fichas');
         resistencia: document.getElementById('attr-resistencia'),
         agilidade: document.getElementById('attr-agilidade'),
         carisma: document.getElementById('attr-carisma'),
-        intuicao: document.getElementById('attr-intuicao')
+        intuicao: document.getElementById('attr-intuicao'),
+        estamina: document.getElementById('attr-estamina')
     };
 
     const statusInputs = {
@@ -124,8 +125,9 @@ const listaFichas = document.getElementById('lista-fichas');
         // Update list active state
         renderFichasList();
         
-        // Recalcular HP base para ter certeza que bate com a fórmula
+        // Recalcular HP base e Estamina para ter certeza que bate com a fórmula
         recalcularVidaMax();
+        recalcularEstaminaMax();
     }
 
     // Create New Ficha
@@ -157,8 +159,9 @@ const listaFichas = document.getElementById('lista-fichas');
         // Remove active class from list
         document.querySelectorAll('.ficha-item').forEach(item => item.classList.remove('active'));
         
-        // Set inicial attributes to trigger initial HP formula
+        // Set inicial attributes to trigger initial HP/Estamina formula
         recalcularVidaMax();
+        recalcularEstaminaMax();
     }
 
     // Save Ficha
@@ -265,8 +268,25 @@ const listaFichas = document.getElementById('lista-fichas');
         }
     }
     
+    function recalcularEstaminaMax() {
+        const estAttr = parseInt(attrInputs.estamina.value) || 0;
+        const novaEstMax = estAttr * 2;
+        
+        statusInputs.estaminaMax.value = novaEstMax;
+        
+        if (!fichaAtualId) {
+            statusInputs.estaminaAtual.value = novaEstMax;
+        } else {
+            let estAtual = parseInt(statusInputs.estaminaAtual.value) || 0;
+            if (estAtual > novaEstMax) {
+                statusInputs.estaminaAtual.value = novaEstMax;
+            }
+        }
+    }
+    
     attrInputs.resistencia.addEventListener('input', recalcularVidaMax);
     attrInputs.forca.addEventListener('input', recalcularVidaMax);
+    attrInputs.estamina.addEventListener('input', recalcularEstaminaMax);
 
     inputIsPlayer.addEventListener('change', toggleLoginFields);
     inputIsMaster.addEventListener('change', toggleLoginFields);

@@ -58,12 +58,13 @@ const modal = document.getElementById('player-modal');
             const stats = ficha.status || {};
             const attrs = ficha.atributos || {};
             const computedHpMax = 50 + ((attrs.resistencia || 0) * 10) + ((attrs.forca || 0) * 2);
+            const computedEstMax = (attrs.estamina || 0) * 2;
 
             const hpAtual = stats.vidaAtual !== undefined ? stats.vidaAtual : computedHpMax;
             const hpMax = stats.vidaMax || computedHpMax;
             
-            const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : 0;
-            const estMax = stats.estaminaMax || 0;
+            const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : computedEstMax;
+            const estMax = stats.estaminaMax || computedEstMax;
 
             // Se a imagem falhar em carregar (ex: URL inválida), usa o placeholder gerado
             slot.innerHTML = `
@@ -98,12 +99,13 @@ const modal = document.getElementById('player-modal');
         const stats = ficha.status || {};
         const attrs = ficha.atributos || {};
         const computedHpMax = 50 + ((attrs.resistencia || 0) * 10) + ((attrs.forca || 0) * 2);
+        const computedEstMax = (attrs.estamina || 0) * 2;
 
         const hpAtual = stats.vidaAtual !== undefined ? stats.vidaAtual : computedHpMax;
         const hpMax = stats.vidaMax || computedHpMax;
 
-        const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : 0;
-        const estMax = stats.estaminaMax || 0;
+        const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : computedEstMax;
+        const estMax = stats.estaminaMax || computedEstMax;
         
         const statNames = [
             { label: 'Vida', current: hpAtual, max: hpMax },
@@ -224,12 +226,13 @@ function updatePlayerPanel() {
     const stats = myFicha.status || {};
     const attrs = myFicha.atributos || {};
     const computedHpMax = 50 + ((attrs.resistencia || 0) * 10) + ((attrs.forca || 0) * 2);
+    const computedEstMax = (attrs.estamina || 0) * 2;
     
     const hpAtual = stats.vidaAtual !== undefined ? stats.vidaAtual : computedHpMax;
     const hpMax = stats.vidaMax || computedHpMax;
     
-    const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : 0;
-    const estMax = stats.estaminaMax || 0;
+    const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : computedEstMax;
+    const estMax = stats.estaminaMax || computedEstMax;
 
     document.getElementById('hp-value').textContent = `${hpAtual}/${hpMax}`;
     document.getElementById('est-value').textContent = `${estAtual}/${estMax}`;
