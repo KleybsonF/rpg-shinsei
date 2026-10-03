@@ -58,9 +58,13 @@ const modal = document.getElementById('player-modal');
             const fotoUrl = ficha.foto || `https://ui-avatars.com/api/?name=${inicial}&background=151520&color=00d2ff&size=128&font-size=0.5&bold=true`;
 
             const stats = ficha.status || {};
-            const hpAtual = stats.vidaAtual || 0;
-            const hpMax = stats.vidaMax || 0;
-            const estAtual = stats.estaminaAtual || 0;
+            const attrs = ficha.atributos || {};
+            const computedHpMax = 50 + ((attrs.resistencia || 0) * 10) + ((attrs.forca || 0) * 2);
+
+            const hpAtual = stats.vidaAtual !== undefined ? stats.vidaAtual : computedHpMax;
+            const hpMax = stats.vidaMax || computedHpMax;
+            
+            const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : 0;
             const estMax = stats.estaminaMax || 0;
 
             // Se a imagem falhar em carregar (ex: URL inválida), usa o placeholder gerado
@@ -94,10 +98,18 @@ const modal = document.getElementById('player-modal');
         const statusList = document.getElementById('modal-status');
         statusList.innerHTML = '';
         const stats = ficha.status || {};
+        const attrs = ficha.atributos || {};
+        const computedHpMax = 50 + ((attrs.resistencia || 0) * 10) + ((attrs.forca || 0) * 2);
+
+        const hpAtual = stats.vidaAtual !== undefined ? stats.vidaAtual : computedHpMax;
+        const hpMax = stats.vidaMax || computedHpMax;
+
+        const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : 0;
+        const estMax = stats.estaminaMax || 0;
         
         const statNames = [
-            { label: 'Vida', current: stats.vidaAtual, max: stats.vidaMax },
-            { label: 'Estamina', current: stats.estaminaAtual, max: stats.estaminaMax }
+            { label: 'Vida', current: hpAtual, max: hpMax },
+            { label: 'Estamina', current: estAtual, max: estMax }
         ];
         
         statNames.forEach(s => {
@@ -213,8 +225,17 @@ function updatePlayerPanel() {
     document.getElementById('current-player-name').textContent = myFicha.nome || 'Meu Personagem';
     
     const stats = myFicha.status || {};
-    document.getElementById('hp-value').textContent = `${stats.vidaAtual || 0}/${stats.vidaMax || 0}`;
-    document.getElementById('est-value').textContent = `${stats.estaminaAtual || 0}/${stats.estaminaMax || 0}`;
+    const attrs = myFicha.atributos || {};
+    const computedHpMax = 50 + ((attrs.resistencia || 0) * 10) + ((attrs.forca || 0) * 2);
+    
+    const hpAtual = stats.vidaAtual !== undefined ? stats.vidaAtual : computedHpMax;
+    const hpMax = stats.vidaMax || computedHpMax;
+    
+    const estAtual = stats.estaminaAtual !== undefined ? stats.estaminaAtual : 0;
+    const estMax = stats.estaminaMax || 0;
+
+    document.getElementById('hp-value').textContent = `${hpAtual}/${hpMax}`;
+    document.getElementById('est-value').textContent = `${estAtual}/${estMax}`;
 }
 
 // Update Status Buttons
