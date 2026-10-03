@@ -319,3 +319,95 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
         }
     });
 });
+
+// P2P Audio Radio (WebRTC / PeerJS)
+// O Mestre cria um Peer com um ID fixo baseado num "tableId". Vamos usar um fixo por enquanto.
+const TABLE_RADIO_ID = 'rpg-shinsei-radio-room-1';
+let peer = null;
+let currentCall = null;
+let localStream = null;
+
+const btnStartRadio = document.getElementById('btn-start-radio');
+const btnListenRadio = document.getElementById('btn-listen-radio');
+const radioStatus = document.getElementById('radio-status');
+const radioPlayer = document.getElementById('radio-player');
+
+if (btnStartRadio && btnListenRadio) {
+    // Modo Transmissor (Mestre)
+    btnStartRadio.addEventListener('click', async () => {
+        try {
+            // Pede captura de tela com áudio (no Windows/Chrome permite capturar áudio do sistema ou guia)
+            localStream = await navigator.mediaDevices.getDisplayMedia({ 
+                video: true, 
+                audio: { echoCancellation: false, noiseSuppression: false, autoGainControl: false } 
+            });
+            
+            // Inicia o Peer do mestre
+            peer = new Peer(TABLE_RADIO_ID);
+            
+            peer.on('open', (id) => {
+                radioStatus.textContent = 'Transmissão ATIVA. Aguardando ouvintes...';
+                radioStatus.style.color = '#00ff88';
+                btnStartRadio.disabled = true;
+            });
+
+            // Quando um jogador ligar para o rádio, atende com o stream local
+            peer.on('call', (call) => {
+                call.answer(localStream);
+                console.log('Novo ouvinte conectado ao rádio.');
+            });
+
+            peer.on('error', (err) => {
+                console.error(err);
+                radioStatus.textContent = 'Erro ao criar rádio: ' + err.type;
+                radioStatus.style.color = 'red';
+            });
+
+        } catch (err) {
+            console.error('Erro ao capturar áudio:', err);
+            radioStatus.textContent = 'Permissão negada ou erro na captura.';
+            radioStatus.style.color = 'red';
+        }
+    });
+
+    // Modo Ouvinte (Jogadores)
+    btnListenRadio.addEventListener('click', () => {
+        if (!peer) {
+            peer = new Peer(); // Peer genérico para o jogador
+        }
+
+        peer.on('open', () => {
+            radioStatus.textContent = 'Conectando ao rádio...';
+            
+            // Liga para o ID fixo do rádio
+            const call = peer.call(TABLE_RADIO_ID, new MediaStream()); // Manda stream vazio pra receber o do mestre
+            
+            call.on('stream', (remoteStream) => {
+                radioPlayer.srcObject = remoteStream;
+                radioStatus.textContent = '📻 Sintonizado no rádio da mesa!';
+                radioStatus.style.color = '#00d2ff';
+                btnListenRadio.disabled = true;
+            });
+
+            call.on('error', (err) => {
+                console.error('Erro na chamada:', err);
+                radioStatus.textContent = 'Erro ao conectar. O rádio está online?';
+                radioStatus.style.color = 'red';
+            });
+            
+            call.on('close', () => {
+                radioStatus.textContent = 'Transmissão encerrada.';
+                radioStatus.style.color = 'gray';
+                btnListenRadio.disabled = false;
+            });
+            
+            currentCall = call;
+        });
+
+        peer.on('error', (err) => {
+            console.error(err);
+            radioStatus.textContent = 'Erro de conexão ou Rádio offline.';
+            radioStatus.style.color = 'red';
+        });
+    });
+}

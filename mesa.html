@@ -6,6 +6,8 @@
     <title>Mesa de RPG</title>
     <link rel="stylesheet" href="mesa.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- PeerJS para streaming P2P -->
+    <script src="https://unpkg.com/peerjs@1.5.1/dist/peerjs.min.js"></script>
 </head>
 <body>
     <div class="mesa-container">
@@ -19,6 +21,17 @@
             </div>
             <div class="mesa-actions">
                 <button id="btn-roll-d2" class="btn-dice">Rolar D2 (Moeda)</button>
+            </div>
+            
+            <!-- Radio Panel -->
+            <div class="radio-panel" id="radio-panel">
+                <h4>📻 Rádio da Mesa</h4>
+                <div class="radio-controls">
+                    <button id="btn-start-radio" class="btn-primary">Transmitir Som do PC</button>
+                    <button id="btn-listen-radio" class="btn-success">Ouvir Transmissão</button>
+                </div>
+                <p id="radio-status" class="radio-status">Rádio offline.</p>
+                <audio id="radio-player" autoplay></audio>
             </div>
         </div>
         
