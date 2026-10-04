@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Regras e Mecânicas - Atlas Celestial</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #030509;
+            --mesa-bg: rgba(10, 14, 26, 0.9);
+            --accent-blue: #ff5e00;
+            --border-color: #2a2a3a;
+            --text-main: #e0e0e0;
+            --text-muted: #8b8b99;
+            --font-heading: 'Orbitron', sans-serif;
+            --font-body: 'Rajdhani', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-body);
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                radial-gradient(1px 1px at 10% 20%, #fff, transparent),
+                radial-gradient(1px 1px at 72% 17%, #fff, transparent),
+                radial-gradient(2px 2px at 90% 72%, rgba(255, 150, 100, 0.5), transparent);
+            background-size: 250px 250px;
+        }
+
+        .document-a4 {
+            background: var(--mesa-bg);
+            border: 2px solid var(--accent-blue);
+            box-shadow: 0 0 30px rgba(255, 94, 0, 0.15), inset 0 0 20px rgba(255, 94, 0, 0.05);
+            border-radius: 10px;
+            width: 100%;
+            max-width: 800px;
+            padding: 60px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        h1, h2, h3 {
+            font-family: var(--font-heading);
+            color: var(--accent-blue);
+            text-transform: uppercase;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            letter-spacing: 4px;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255, 94, 0, 0.6);
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: var(--text-muted);
+            margin-bottom: 50px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        h2 {
+            border-bottom: 1px solid var(--accent-blue);
+            padding-bottom: 10px;
+            margin-top: 40px;
+            font-size: 1.8rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            margin-top: 25px;
+            color: #ffa56b;
+        }
+
+        p, li {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+
+        ul {
+            padding-left: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(0,0,0,0.5);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: rgba(255, 94, 0, 0.1);
+            color: var(--accent-blue);
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+        
+        .crit {
+            color: #ff3366;
+            font-weight: bold;
+        }
+
+        .print-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--accent-blue);
+            color: #000;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 5px;
+            font-family: var(--font-heading);
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(255, 94, 0, 0.5);
+            transition: transform 0.2s;
+            z-index: 100;
+        }
+
+        .print-btn:hover {
+            transform: scale(1.05);
+        }
+
+        @media print {
+            body {
+                background: white !important;
+                color: black !important;
+                padding: 0;
+            }
+            .document-a4 {
+                background: white !important;
+                border: none !important;
+                box-shadow: none !important;
+                padding: 0 !important;
+                max-width: 100% !important;
+            }
+            .print-btn {
+                display: none !important;
+            }
+            h1, h2, h3, .highlight {
+                color: #b34200 !important;
+                text-shadow: none !important;
+            }
+            th {
+                background: #f0f0f0 !important;
+                color: black !important;
+            }
+            table, th, td {
+                border-color: #ccc !important;
+            }
+            .crit { color: #cc0000 !important; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="print-btn" onclick="window.print()">📥 Baixar / Imprimir PDF</button>
+
+    <div class="document-a4">
+        <h1>Livro de Regras</h1>
+        <div class="subtitle">Atlas Celestial · 72 Mundos</div>
+
+        <h2>1. Status Básicos</h2>
+        <p>Os status do seu personagem definem sua capacidade de sobrevivência e ação. Eles são escalados com base nos seus atributos principais.</p>
+        <ul>
+            <li><span class="highlight">Vida Máxima:</span> Calculada pela fórmula <code>50 + (Resistência × 10) + (Força × 2)</code>.</li>
+            <li><span class="highlight">Estamina Máxima:</span> Ocorre na proporção de <code>Atributo Estamina × 2</code>.</li>
+        </ul>
+
+        <h2>2. Sistema de Rolagem de Atributos</h2>
+        <p>O RPG utiliza um sistema de dados escaláveis para os atributos principais: <span class="highlight">Força, Destreza, Mira, Agilidade e Carisma</span>. Quanto maior o seu nível no atributo, maiores e mais complexos serão os dados rolados, permitindo resultados explosivos.</p>
+        
+        <table>
+            <tr>
+                <th>Nível do Atributo</th>
+                <th>Dado Rolado</th>
+            </tr>
+            <tr><td>0 a 4</td><td>1D20</td></tr>
+            <tr><td>5 a 9</td><td>1D20 + 1D20</td></tr>
+            <tr><td>10 a 14</td><td>1D20 × (1 + 1D2)</td></tr>
+            <tr><td>15 a 19</td><td>1D20 × (1 + 1D3)</td></tr>
+            <tr><td>20 a 24</td><td>1D20 × (1 + 1D4)</td></tr>
+            <tr><td>25 a 29</td><td>1D20 × (1 + 1D5)</td></tr>
+            <tr><td>30 a 34</td><td>1D20 × (1 + 1D6)</td></tr>
+            <tr><td>35 a 39</td><td>1D20 × (1 + 1D8)</td></tr>
+            <tr><td>40 a 44</td><td>1D20 × (1 + 1D10)</td></tr>
+            <tr><td>45 a 49</td><td>1D23 × (1 + 1D10)</td></tr>
+            <tr><td>50 a 54</td><td>1D23 × (1 + 1D11)</td></tr>
+            <tr><td>55 a 59</td><td>1D25 × (1 + 1D11)</td></tr>
+            <tr><td>60 a 64</td><td>1D25 × (1 + 1D12)</td></tr>
+            <tr><td>65 a 69</td><td>1D27 × (1 + 1D12)</td></tr>
+            <tr><td>70 a 74</td><td>1D27 × (1 + 1D13)</td></tr>
+            <tr><td>75 a 79</td><td>1D30 × (1 + 1D13)</td></tr>
+            <tr><td>80 a 84</td><td>1D30 × (1 + 1D14)</td></tr>
+            <tr><td>85 a 89</td><td>1D33 × (1 + 1D14)</td></tr>
+            <tr><td>90 a 94</td><td>1D33 × (1 + 1D15)</td></tr>
+            <tr><td>95 a 99</td><td>1D35 × (1 + 1D15)</td></tr>
+            <tr><td>100+</td><td>1D35 × (1 + 1D16)</td></tr>
+        </table>
+        
+        <p><em>Para atributos como Resistência, o sistema padrão é <code>1D20 + Valor do Atributo</code>.</em></p>
+
+        <h3>O Caso Especial da Intuição</h3>
+        <p>A Intuição não segue a tabela de multiplicadores. Ela usa uma rolagem direta e flat, aumentando o tamanho do dado em si:</p>
+        <p><span class="highlight">Fórmula da Intuição:</span> <code>1D(10 + Nível de Intuição)</code></p>
+        <ul>
+            <li>Exemplo (Intuição 0): rola 1D10</li>
+            <li>Exemplo (Intuição 10): rola 1D20</li>
+            <li>Exemplo (Intuição 100): rola 1D110</li>
+        </ul>
+
+        <h2>3. Combate e Danos</h2>
+        <p>O combate diferencia ataques corpo-a-corpo (Dano Físico) e ataques à distância (Dano de Mira).</p>
+
+        <h3>Dano Físico</h3>
+        <p>Baseado na Força do personagem. Um d20 puro é rolado para definir a chance de acerto e multiplicador de dano.</p>
+        <ul>
+            <li><span class="highlight">Acerto Normal (2 a 19):</span> Causa dano igual à <code>Dano da Arma + Força</code>.</li>
+            <li><span class="crit">Acerto Crítico (20):</span> Multiplica a Força e a Arma. Causa <code>(Dano da Arma + Força) × 2</code>.</li>
+            <li><span style="color: #666; font-weight: bold;">Falha Crítica (1):</span> O dano é zerado imediatamente. Não há dano "de raspão" no combate físico.</li>
+        </ul>
+
+        <h3>Dano de Mira (Armas de Fogo/Distância)</h3>
+        <p>O dano de mira ignora Força e usa as diretrizes de Ranking da arma e o atributo Mira do personagem. O Dado de Acerto d20 dita o resultado final.</p>
+        
+        <table>
+            <tr>
+                <th>Ranking da Arma</th>
+                <th>Dano Base da Arma</th>
+            </tr>
+            <tr><td>Rank 1</td><td>20</td></tr>
+            <tr><td>Rank 2</td><td>35</td></tr>
+            <tr><td>Rank 3</td><td>50</td></tr>
+            <tr><td>Rank 4</td><td>70</td></tr>
+            <tr><td>Rank 5</td><td>90</td></tr>
+            <tr><td>Rank 6</td><td>115</td></tr>
+            <tr><td>Rank 7</td><td>140</td></tr>
+            <tr><td>Rank 8</td><td>170</td></tr>
+            <tr><td>Rank 9</td><td>205</td></tr>
+            <tr><td>Rank 10</td><td>245</td></tr>
+        </table>
+
+        <p><span class="highlight">Fórmula Base do Dano de Mira:</span> <code>Dano Base da Arma (Tabela) + Atributo Mira</code></p>
+        
+        <p>Efeitos de Acerto no Dano de Mira (1d20):</p>
+        <ul>
+            <li><span class="crit">Acerto Crítico (19 a 20):</span> <code>Dano Base × 2</code>.</li>
+            <li><span class="highlight">Acerto Normal (11 a 18):</span> <code>Dano Base</code> (Sem multiplicador).</li>
+            <li><span style="color: #ffaa00; font-weight: bold;">De Raspão (2 a 10):</span> O tiro atinge de raspão. Causa <code>Dano Base / 2</code>.</li>
+            <li><span style="color: #666; font-weight: bold;">Falha Crítica (1):</span> O tiro erra completamente. Dano 0.</li>
+        </ul>
+
+    </div>
+
+</body>
+</html>
