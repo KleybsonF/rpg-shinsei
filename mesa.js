@@ -414,12 +414,13 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
         if (!myFicha) return;
         
         const attrName = e.target.getAttribute('data-attr');
-        const attrValue = (myFicha.atributos && myFicha.atributos[attrName]) ? myFicha.atributos[attrName] : 0;
+        let actualAttrForValue = attrName === 'observacao' ? 'intuicao' : attrName;
+        const attrValue = (myFicha.atributos && myFicha.atributos[actualAttrForValue]) ? myFicha.atributos[actualAttrForValue] : 0;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Jogador';
         
                 // Apenas Força, Destreza, Mira, Agilidade e Carisma usam a nova tabela de escalonamento.
         let rollData;
-        const validAttributes = ['forca', 'destreza', 'mira', 'agilidade', 'carisma'];
+        const validAttributes = ['forca', 'destreza', 'mira', 'agilidade', 'carisma', 'observacao'];
         
         if (validAttributes.includes(attrName)) {
             rollData = calculateAttributeRoll(attrValue);
