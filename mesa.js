@@ -206,6 +206,15 @@ const modal = document.getElementById('player-modal');
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
+                } else if (data.tipo === 'status') {
+                    const color = data.stat === 'vida' ? '#ff3366' : '#00ff88';
+                    const icon = data.action === 'Adicionar' ? '+' : '-';
+                    const actionDesc = data.action === 'Adicionar' ? 'adicionou' : 'removeu';
+                    div.innerHTML = `
+                        <span class="log-player">${data.playerName}</span> ${actionDesc} <b>${data.stat.toUpperCase()}</b>:<br>
+                        <span style="color: ${color}; font-size: 1.2rem; font-weight: bold;">${icon}${data.amount}</span><br>
+                        <small style="color:var(--text-muted)">Nova ${data.stat.toUpperCase()}: ${data.result} / ${data.max}</small>
+                    `;
                 } else {
                     div.innerHTML = `
                         <span class="log-player">${data.playerName}</span> rolou a moeda e tirou: 
@@ -280,6 +289,19 @@ document.querySelectorAll('.btn-add, .btn-sub').forEach(btn => {
             const fichaRef = doc(db, "fichas", loggedPlayerId);
             await updateDoc(fichaRef, {
                 [`status.${statName}Atual`]: atual
+            });
+            
+            const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Jogador';
+            await addDoc(collection(db, "rolagens"), {
+                playerId: loggedPlayerId,
+                playerName: loggedPlayerName,
+                tipo: 'status',
+                action: actionStr,
+                stat: statName,
+                amount: amount,
+                result: atual,
+                max: max,
+                timestamp: Date.now()
             });
         } catch (error) {
             console.error("Erro ao atualizar status:", error);
