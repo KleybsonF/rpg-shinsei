@@ -143,7 +143,26 @@ const modal = document.getElementById('player-modal');
     });
     
     // Dice Logic
+    const btnRollD2 = document.getElementById('btn-roll-d2');
     const diceLogs = document.getElementById('dice-logs');
+
+    if (btnRollD2) {
+        btnRollD2.addEventListener('click', async () => {
+            const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || 'Jogador Desconhecido';
+            const result = Math.floor(Math.random() * 2) + 1; // 1 ou 2
+            
+            try {
+                await addDoc(collection(db, "rolagens"), {
+                    playerId: loggedPlayerId,
+                    playerName: loggedPlayerName,
+                    result: result,
+                    timestamp: Date.now()
+                });
+            } catch (error) {
+                console.error("Erro ao rolar dado:", error);
+            }
+        });
+    }
 
     // Listen to Dice Rolls
     function loadDiceLogs() {
