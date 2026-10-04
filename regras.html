@@ -242,7 +242,7 @@
         
         <div style="background: rgba(255, 94, 0, 0.1); border-left: 4px solid var(--accent-blue); padding: 15px; margin: 20px 0;">
             <span style="display: block; font-family: var(--font-heading); color: var(--accent-blue); margin-bottom: 5px;">Fórmula do Nível de Dano Físico:</span>
-            <code style="font-size: 1.2rem; color: white;">Nível = (Força × 2) + (Destreza / 3)</code>
+            <code style="font-size: 1.2rem; color: white;">Nível = ((Força × 2) + Destreza) / 3</code>
         </div>
         
         <p>A tabela abaixo detalha exatamente a rolagem do seu dano com base no Nível calculado acima, incluindo os bônus absolutos (flat) que garantem o Dano Mínimo e Máximo do sistema:</p>
@@ -468,7 +468,7 @@
             document.getElementById('out-d-intuicao').textContent = `1D${10 + intuicao}`;
             
             // Dano Físico
-            let nivelFisico = Math.floor((forca * 2) + (destreza / 3));
+            let nivelFisico = Math.floor(((forca * 2) + destreza) / 3);
             if (nivelFisico < 0) nivelFisico = 0;
             document.getElementById('out-d-fisico').textContent = getDadoEscalonado(nivelFisico, true);
         }

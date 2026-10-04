@@ -486,7 +486,7 @@ if (btnDanoFisico) {
         const forca = attrs.forca || 0;
         const destreza = attrs.destreza || 0;
         
-        let nivel = Math.floor((forca * 2) + (destreza / 3));
+        let nivel = Math.floor(((forca * 2) + destreza) / 3);
         if (nivel < 0) nivel = 0;
         
         let rollData = calculateAttributeRoll(nivel);
