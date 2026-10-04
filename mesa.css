@@ -414,7 +414,7 @@ body {
 }
 
 .dice-logs {
-    height: 180px;
+    height: 350px;
     width: 100%;
     overflow-y: auto;
     display: flex;
