@@ -438,9 +438,6 @@ if (btnDanoFisico) {
         if (acerto === 1) {
             multiplicador = 0;
             acertoType = 'miss';
-        } else if (acerto <= 10) {
-            multiplicador = 0.5;
-            acertoType = 'half';
         } else if (acerto === 20) {
             multiplicador = 2;
             acertoType = 'crit';
