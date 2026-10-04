@@ -39,6 +39,34 @@ const listaFichas = document.getElementById('lista-fichas');
         estaminaMax: document.getElementById('status-estamina-max')
     };
 
+    // Lógica de Senha de Acesso
+    const passwordScreen = document.getElementById('password-screen');
+    const fichasContent = document.getElementById('fichas-content');
+    const fichaPassword = document.getElementById('ficha-password');
+    const btnLoginFichas = document.getElementById('btn-login-fichas');
+    const passwordError = document.getElementById('password-error');
+
+    if (sessionStorage.getItem('fichas_access') === 'true') {
+        if(passwordScreen) passwordScreen.style.display = 'none';
+        if(fichasContent) fichasContent.style.display = 'block';
+    }
+
+    if (btnLoginFichas) {
+        btnLoginFichas.addEventListener('click', () => {
+            if (fichaPassword.value === 'flaskviado') {
+                sessionStorage.setItem('fichas_access', 'true');
+                passwordScreen.style.display = 'none';
+                fichasContent.style.display = 'block';
+            } else {
+                passwordError.style.display = 'block';
+            }
+        });
+
+        fichaPassword.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') btnLoginFichas.click();
+        });
+    }
+
     let fichas = [];
     let fichaAtualId = null;
 

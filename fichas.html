@@ -7,8 +7,16 @@
     <link rel="stylesheet" href="fichas.css">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-<body>
-    <div class="fichas-container">
+<body style="margin: 0; padding: 0;">
+    <div id="password-screen" style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; background: #0a0a0a; color: #fff; font-family: 'Courier New', Courier, monospace;">
+        <h2 style="color: #00d2ff; text-shadow: 0 0 10px #00d2ff; margin-bottom: 30px; font-size: 2rem;">Acesso ao Sistema de Fichas</h2>
+        <input type="password" id="ficha-password" placeholder="Digite a senha..." style="padding: 15px; margin-bottom: 20px; width: 250px; background: rgba(0,210,255,0.05); border: 1px solid #00d2ff; color: white; outline: none; font-size: 1.1rem; text-align: center;">
+        <button id="btn-login-fichas" class="btn-success" style="padding: 10px 40px; font-size: 1.2rem; cursor: pointer;">ACESSAR</button>
+        <p id="password-error" style="color: #ff3366; margin-top: 15px; display: none; text-shadow: 0 0 5px #ff3366;">Acesso negado. Senha incorreta.</p>
+    </div>
+
+    <div id="fichas-content" style="display: none;">
+        <div class="fichas-container">
         <!-- Sidebar para lista de fichas -->
         <aside class="sidebar">
             <div class="sidebar-header">
@@ -164,6 +172,7 @@
                 <p>Selecione uma ficha na lista ou crie uma nova para começar.</p>
             </div>
         </main>
+    </div>
     </div>
 
     <script type="module" src="fichas.js"></script>
