@@ -601,3 +601,48 @@ body {
     color: #000;
     box-shadow: 0 0 10px rgba(255,51,102,0.5);
 }
+
+@media (max-width: 900px) {
+    .mesa-central {
+        width: 95%;
+        padding: 15px;
+    }
+    .players-ring {
+        flex-direction: row;
+        justify-content: center;
+        gap: 10px;
+    }
+    .player-panel {
+        width: 95%;
+        padding: 10px;
+    }
+    .rolls-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .player-status-bar {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 600px) {
+    .mesa-central h2 {
+        font-size: 1.5rem;
+    }
+    .rolls-grid {
+        grid-template-columns: 1fr;
+    }
+    .player-status-bar {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .dice-logs {
+        height: 250px;
+    }
+    .player-foto {
+        width: 60px;
+        height: 60px;
+    }
+    .player-nome {
+        font-size: 0.8rem;
+    }
+}

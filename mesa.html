@@ -26,18 +26,7 @@
             </div>
         </div>
         
-        <!-- Spotify Panel Lateral -->
-        <div class="spotify-panel" id="spotify-panel">
-            <h4>🎵 Spotify Jam</h4>
-            <div class="spotify-controls">
-                <button id="btn-sync-spotify" class="btn-success">Sync</button>
-                <input type="text" id="spotify-link-input" placeholder="Cole o link...">
-            </div>
-            <div id="spotify-embed-container">
-                <!-- O iframe do Spotify será renderizado aqui -->
-            </div>
-        </div>
-    </div>
+        <!-- Removido o panel antigo do spotify daqui -->
 
     <!-- Painel do Jogador Atual (controles pessoais) -->
     <div id="player-panel" class="player-panel hidden">
@@ -122,6 +111,26 @@
                 <button id="btn-status-confirm" class="btn-primary" style="flex: 1;">Confirmar</button>
                 <button id="btn-status-cancel" class="btn-secondary" style="flex: 1; background: #333; border: 1px solid var(--border-color); color: white; cursor: pointer; border-radius: 5px; font-family: 'Orbitron', sans-serif;">Cancelar</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Botão Flutuante do Spotify -->
+    <button id="btn-spotify-toggle" style="position: fixed; top: 20px; left: 20px; z-index: 100; background: #1db954; border: 2px solid #000; border-radius: 50%; width: 60px; height: 60px; font-size: 30px; cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.5); display: flex; align-items: center; justify-content: center; transition: transform 0.2s;">
+        🎵
+    </button>
+
+    <!-- Modal do Spotify -->
+    <div id="modal-spotify" class="modal hidden">
+        <div class="modal-content" style="max-width: 400px; text-align: center; border: 1px solid #1db954; box-shadow: 0 0 30px rgba(29, 185, 84, 0.2);">
+            <h2 style="color: #1db954; font-family: 'Orbitron', sans-serif; margin-bottom: 20px;">Spotify Jam</h2>
+            <div class="spotify-controls" style="display: flex; gap: 10px; justify-content: center; margin-bottom: 20px;">
+                <input type="text" id="spotify-link-input" placeholder="Cole o link..." style="flex: 1; padding: 10px; border-radius: 5px; border: 1px solid #1db954; background: rgba(0,0,0,0.5); color: white; font-family: 'Rajdhani', sans-serif;">
+                <button id="btn-sync-spotify" class="btn-success" style="background: #1db954; border: none; padding: 10px 20px; border-radius: 5px; color: black; font-weight: bold; cursor: pointer; font-family: 'Orbitron', sans-serif;">Sync</button>
+            </div>
+            <div id="spotify-embed-container" style="width: 100%; min-height: 152px; border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
+                <!-- O iframe do Spotify será renderizado aqui -->
+            </div>
+            <button id="btn-spotify-close" class="btn-secondary" style="padding: 10px 30px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif;">Fechar</button>
         </div>
     </div>
 

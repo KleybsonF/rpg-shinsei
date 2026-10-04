@@ -621,5 +621,25 @@ function listenSpotifyJam() {
             }
         }
     });
+
 }
 listenSpotifyJam();
+
+// Lógica do Modal do Spotify
+const btnSpotifyToggle = document.getElementById('btn-spotify-toggle');
+const modalSpotify = document.getElementById('modal-spotify');
+const btnSpotifyClose = document.getElementById('btn-spotify-close');
+
+if (btnSpotifyToggle && modalSpotify) {
+    btnSpotifyToggle.addEventListener('click', () => {
+        modalSpotify.classList.remove('hidden');
+    });
+    btnSpotifyClose.addEventListener('click', () => {
+        modalSpotify.classList.add('hidden');
+    });
+    window.addEventListener('click', (e) => {
+        if (e.target === modalSpotify) {
+            modalSpotify.classList.add('hidden');
+        }
+    });
+}
