@@ -639,3 +639,43 @@ if (btnSpotifyToggle && modalSpotify) {
         }
     });
 }
+
+
+    // Logica dos Botoes de Historia e Inventario
+    const btnShowHistoria = document.getElementById('btn-show-historia');
+    const btnShowInventario = document.getElementById('btn-show-inventario');
+    const modalText = document.getElementById('modal-text');
+    const modalTextTitle = document.getElementById('modal-text-title');
+    const textHistoria = document.getElementById('modal-historia');
+    const textInventario = document.getElementById('modal-inventario');
+    const btnCloseText = document.getElementById('btn-close-text');
+
+    if(btnShowHistoria) {
+        btnShowHistoria.addEventListener('click', () => {
+            modalTextTitle.textContent = "História";
+            textHistoria.classList.remove('hidden');
+            textInventario.classList.add('hidden');
+            modalText.classList.remove('hidden');
+        });
+    }
+
+    if(btnShowInventario) {
+        btnShowInventario.addEventListener('click', () => {
+            modalTextTitle.textContent = "Inventário";
+            textInventario.classList.remove('hidden');
+            textHistoria.classList.add('hidden');
+            modalText.classList.remove('hidden');
+        });
+    }
+
+    if(btnCloseText) {
+        btnCloseText.addEventListener('click', () => {
+            modalText.classList.add('hidden');
+        });
+    }
+
+    window.addEventListener('click', (e) => {
+        if (e.target === modalText) {
+            modalText.classList.add('hidden');
+        }
+    });

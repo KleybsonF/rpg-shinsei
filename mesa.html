@@ -26,14 +26,10 @@
                 </div>
                 
                 <div class="modal-body custom-scrollbar">
-                    <div class="info-section">
-                        <h3 class="neon-title">HISTÓRIA</h3>
-                        <div id="modal-historia" class="mock-input"></div>
-                    </div>
-                    <div class="info-section">
-                        <h3 class="neon-title">INVENTÁRIO</h3>
-                        <div id="modal-inventario" class="mock-input"></div>
-                    </div>
+                    <div class="info-section" style="display: flex; gap: 10px; margin-bottom: 10px;">
+    <button id="btn-show-historia" class="btn-primary" style="flex: 1; font-size: 0.8rem; padding: 12px; background-color: rgba(0, 210, 255, 0.1); border: 1px solid var(--accent-blue); color: var(--text-main);">📖 LER HISTÓRIA</button>
+    <button id="btn-show-inventario" class="btn-primary" style="flex: 1; font-size: 0.8rem; padding: 12px; background-color: rgba(0, 210, 255, 0.1); border: 1px solid var(--accent-blue); color: var(--text-main);">🎒 VER INVENTÁRIO</button>
+</div>
                     
                     <div class="status-grid-container">
                         <div class="atributos-section">
@@ -138,5 +134,18 @@
     </div>
 
     <script type="module" src="mesa.js"></script>
+
+    <!-- Modal de Texto Longo (História/Inventário) -->
+    <div id="modal-text" class="modal hidden">
+        <div class="modal-content" style="max-width: 600px; width: 90%;">
+            <h2 id="modal-text-title" style="color: var(--accent-blue); margin-bottom: 15px; font-family: var(--font-heading); text-align: center;">Título</h2>
+            <div id="modal-historia" class="mock-input hidden custom-scrollbar" style="white-space: pre-wrap; min-height: 200px; max-height: 60vh; overflow-y: auto;"></div>
+            <div id="modal-inventario" class="mock-input hidden custom-scrollbar" style="white-space: pre-wrap; min-height: 200px; max-height: 60vh; overflow-y: auto;"></div>
+            <div style="text-align: center; margin-top: 20px;">
+                <button id="btn-close-text" class="btn-secondary" style="padding: 10px 30px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif;">Fechar</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
