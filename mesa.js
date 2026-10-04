@@ -201,6 +201,8 @@ const modal = document.getElementById('player-modal');
                         acertoHtml = `<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO! (Dado = ${data.acerto})</span><br>`;
                     } else if (data.acertoType === 'half') {
                         acertoHtml = `<span style="color: #ffaa00;">De Raspão... (Dado = ${data.acerto})</span><br>`;
+                    } else if (data.acertoType === 'miss') {
+                        acertoHtml = `<span style="color: #555555; font-weight: bold; text-shadow: 0 0 5px #ff0000;">FALHA CRÍTICA! (Dado = ${data.acerto})</span><br>`;
                     } else {
                         acertoHtml = `<span style="color: #a8b2c1;">Acerto Normal (Dado = ${data.acerto})</span><br>`;
                     }
@@ -216,6 +218,8 @@ const modal = document.getElementById('player-modal');
                         acertoHtml = `<span style="color: #ff3366; font-weight: bold; text-shadow: 0 0 5px #ff3366;">CRÍTICO! (Dado = ${data.acerto})</span><br>`;
                     } else if (data.acertoType === 'half') {
                         acertoHtml = `<span style="color: #ffaa00;">De Raspão... (Dado = ${data.acerto})</span><br>`;
+                    } else if (data.acertoType === 'miss') {
+                        acertoHtml = `<span style="color: #555555; font-weight: bold; text-shadow: 0 0 5px #ff0000;">FALHA CRÍTICA! (Dado = ${data.acerto})</span><br>`;
                     } else {
                         acertoHtml = `<span style="color: #a8b2c1;">Acerto Normal (Dado = ${data.acerto})</span><br>`;
                     }
@@ -430,7 +434,10 @@ if (btnDanoFisico) {
         let multiplicador = 1;
         let acertoType = 'normal';
         
-        if (acerto < 10) {
+        if (acerto === 1) {
+            multiplicador = 0;
+            acertoType = 'miss';
+        } else if (acerto <= 10) {
             multiplicador = 0.5;
             acertoType = 'half';
         } else if (acerto >= 19) {
@@ -482,7 +489,10 @@ if (btnDanoMira) {
         let multiplicador = 1;
         let acertoType = 'normal';
         
-        if (acerto < 10) {
+        if (acerto === 1) {
+            multiplicador = 0;
+            acertoType = 'miss';
+        } else if (acerto <= 10) {
             multiplicador = 0.5;
             acertoType = 'half';
         } else if (acerto >= 19) {
