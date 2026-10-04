@@ -28,6 +28,8 @@ const modal = document.getElementById('player-modal');
             });
             fichas = fichas.slice(0, 8); // Max 8 players
             renderPlayers();
+            const myFicha = fichas.find(f => f.id === loggedPlayerId);
+            if (myFicha) openModal(myFicha, myFicha.foto || "");
             updatePlayerPanel();
         }, (error) => {
             console.error('Erro ao carregar jogadores do Firebase:', error);
@@ -132,15 +134,9 @@ const modal = document.getElementById('player-modal');
         modal.classList.remove('hidden');
     }
 
-    closeBtn.addEventListener('click', () => {
-        modal.classList.add('hidden');
-    });
+    
 
-    window.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.add('hidden');
-        }
-    });
+    
     
     // Dice Logic
     const diceLogs = document.getElementById('dice-logs');
