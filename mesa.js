@@ -220,7 +220,7 @@ const modal = document.getElementById('player-modal');
                         acertoHtml = `<span style="color: #a8b2c1;">Acerto Normal (Dado = ${data.acerto})</span><br>`;
                     }
                     div.innerHTML = `
-                        <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Nível ${data.tier}):<br>
+                        <span class="log-player">${data.playerName}</span> causou <b>Dano de Arma (Mira)</b> (Ranking ${data.tier}):<br>
                         ${acertoHtml}
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
