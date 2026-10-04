@@ -737,3 +737,15 @@ if (btnSpotifyToggle && modalSpotify) {
             }
         });
     }
+
+
+    // Logica do Botao Sair
+    const btnLogout = document.getElementById('btn-logout');
+    if(btnLogout) {
+        btnLogout.addEventListener('click', () => {
+            sessionStorage.removeItem('loggedPlayerId');
+            sessionStorage.removeItem('loggedPlayerName');
+            sessionStorage.removeItem('isMaster');
+            window.location.href = 'login.html';
+        });
+    }
