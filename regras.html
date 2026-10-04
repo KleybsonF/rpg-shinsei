@@ -179,6 +179,7 @@
 <body>
 
     <button class="print-btn" onclick="window.print()">📥 Baixar / Imprimir PDF</button>
+    <button class="print-btn" id="btn-open-sim" style="top: 80px; background: #333; border: 1px solid var(--accent-blue); color: white;">🧮 Simulador de Ficha</button>
 
     <div class="document-a4">
         <h1>Livro de Regras</h1>
@@ -275,53 +276,165 @@
         </ul>
 
     
-        <h2 style="margin-top: 60px; border-top: 1px dashed var(--accent-blue); padding-top: 40px;">4. Simulador de Ficha Rápido</h2>
-        <p>Teste como a distribuição de atributos afetará a vida e estamina máxima do seu personagem.</p>
         
-        <div style="background: rgba(0,0,0,0.4); padding: 20px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-wrap: wrap; gap: 20px;">
-            <div style="flex: 1; min-width: 200px;">
-                <label style="display: block; color: var(--text-muted); margin-bottom: 5px;">Força</label>
-                <input type="number" id="sim-for" value="0" min="0" style="width: 100%; padding: 8px; background: #111; color: white; border: 1px solid var(--accent-blue); border-radius: 4px;">
-                
-                <label style="display: block; color: var(--text-muted); margin-top: 15px; margin-bottom: 5px;">Resistência</label>
-                <input type="number" id="sim-res" value="0" min="0" style="width: 100%; padding: 8px; background: #111; color: white; border: 1px solid var(--accent-blue); border-radius: 4px;">
-                
-                <label style="display: block; color: var(--text-muted); margin-top: 15px; margin-bottom: 5px;">Estamina (Atributo)</label>
-                <input type="number" id="sim-est" value="0" min="0" style="width: 100%; padding: 8px; background: #111; color: white; border: 1px solid var(--accent-blue); border-radius: 4px;">
-            </div>
-            
-            <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; justify-content: center; gap: 20px;">
-                <div style="background: rgba(255, 51, 102, 0.1); border: 1px solid #ff3366; padding: 15px; border-radius: 8px; text-align: center;">
-                    <div style="color: #ff3366; font-size: 0.9rem; text-transform: uppercase;">Vida Máxima</div>
-                    <div id="sim-hp-result" style="font-size: 2rem; font-weight: bold; color: white; font-family: var(--font-heading);">50</div>
-                </div>
-                
-                <div style="background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; padding: 15px; border-radius: 8px; text-align: center;">
-                    <div style="color: #00ff88; font-size: 0.9rem; text-transform: uppercase;">Estamina Máxima</div>
-                    <div id="sim-est-result" style="font-size: 2rem; font-weight: bold; color: white; font-family: var(--font-heading);">0</div>
-                </div>
-            </div>
-        </div>
-        
-        <script>
-            function updateSimulador() {
-                const forca = parseInt(document.getElementById('sim-for').value) || 0;
-                const res = parseInt(document.getElementById('sim-res').value) || 0;
-                const est = parseInt(document.getElementById('sim-est').value) || 0;
-                
-                const hpMax = 50 + (res * 10) + (forca * 2);
-                const estMax = est * 2;
-                
-                document.getElementById('sim-hp-result').textContent = hpMax;
-                document.getElementById('sim-est-result').textContent = estMax;
-            }
-            
-            document.getElementById('sim-for').addEventListener('input', updateSimulador);
-            document.getElementById('sim-res').addEventListener('input', updateSimulador);
-            document.getElementById('sim-est').addEventListener('input', updateSimulador);
-        </script>
 
     </div>
+
+
+    <!-- Modal Simulador -->
+    <div id="modal-simulador" style="display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); backdrop-filter: blur(5px); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: var(--mesa-bg); border: 1px solid var(--accent-blue); border-radius: 10px; padding: 30px; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; color: white;">
+            <h2 style="text-align: center; margin-top: 0;">Simulador Completo de Ficha</h2>
+            <p style="text-align: center; color: var(--text-muted); margin-bottom: 30px;">Preencha os atributos para simular instantaneamente os seus Status Máximos e Dados de Rolagem.</p>
+            
+            <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+                <!-- Inputs de Atributos -->
+                <div style="flex: 1; min-width: 250px;">
+                    <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">Atributos Base</h3>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label>Força</label>
+                            <input type="number" class="sim-attr" data-attr="forca" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Destreza</label>
+                            <input type="number" class="sim-attr" data-attr="destreza" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Agilidade</label>
+                            <input type="number" class="sim-attr" data-attr="agilidade" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Resistência</label>
+                            <input type="number" class="sim-attr" data-attr="resistencia" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Estamina</label>
+                            <input type="number" class="sim-attr" data-attr="estamina" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Mira</label>
+                            <input type="number" class="sim-attr" data-attr="mira" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Carisma</label>
+                            <input type="number" class="sim-attr" data-attr="carisma" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                        <div>
+                            <label>Intuição</label>
+                            <input type="number" class="sim-attr" data-attr="intuicao" value="0" min="0" style="width:100%; padding:8px; background:#111; color:white; border:1px solid #555; border-radius:4px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Resultados Simulados -->
+                <div style="flex: 1; min-width: 300px;">
+                    <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">Status Resultantes</h3>
+                    <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                        <div style="flex: 1; background: rgba(255, 51, 102, 0.1); border: 1px solid #ff3366; padding: 10px; border-radius: 8px; text-align: center;">
+                            <div style="color: #ff3366; font-size: 0.8rem; text-transform: uppercase;">Vida Máxima</div>
+                            <div id="out-hp" style="font-size: 1.5rem; font-weight: bold;">50</div>
+                        </div>
+                        <div style="flex: 1; background: rgba(0, 255, 136, 0.1); border: 1px solid #00ff88; padding: 10px; border-radius: 8px; text-align: center;">
+                            <div style="color: #00ff88; font-size: 0.8rem; text-transform: uppercase;">Est. Máxima</div>
+                            <div id="out-est" style="font-size: 1.5rem; font-weight: bold;">0</div>
+                        </div>
+                    </div>
+                    
+                    <h3 style="margin-top: 0; border-bottom: 1px solid #555; padding-bottom: 10px;">Dados Calculados</h3>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9rem;">
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Força: <span id="out-d-forca" style="color:var(--accent-blue); float:right;">1D20</span></div>
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Destreza: <span id="out-d-destreza" style="color:var(--accent-blue); float:right;">1D20</span></div>
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Agilidade: <span id="out-d-agilidade" style="color:var(--accent-blue); float:right;">1D20</span></div>
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Mira: <span id="out-d-mira" style="color:var(--accent-blue); float:right;">1D20</span></div>
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Carisma: <span id="out-d-carisma" style="color:var(--accent-blue); float:right;">1D20</span></div>
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Resistência: <span id="out-d-resistencia" style="color:var(--accent-blue); float:right;">1D20 + 0</span></div>
+                        <div style="background: #111; padding: 8px; border-radius: 4px; border-left: 3px solid var(--accent-blue);">Intuição: <span id="out-d-intuicao" style="color:var(--accent-blue); float:right;">1D10</span></div>
+                        <div style="background: rgba(255,51,102,0.1); padding: 8px; border-radius: 4px; border-left: 3px solid #ff3366;">Dano Físico: <span id="out-d-fisico" style="color:#ff3366; float:right;">1D20</span></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button id="btn-close-sim" style="padding: 10px 30px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif;">Fechar Simulador</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Lógica do Modal e Simulador
+        const btnOpen = document.getElementById('btn-open-sim');
+        const btnClose = document.getElementById('btn-close-sim');
+        const modal = document.getElementById('modal-simulador');
+        
+        btnOpen.addEventListener('click', () => { modal.style.display = 'flex'; });
+        btnClose.addEventListener('click', () => { modal.style.display = 'none'; });
+        
+        function getDadoEscalonado(val) {
+            let d1 = 20, d2 = 0, type = 0;
+            if (val < 5) { type = 0; d1 = 20; }
+            else if (val < 10) { type = 1; d1 = 20; d2 = 20; }
+            else if (val < 15) { type = 2; d1 = 20; d2 = 2; }
+            else if (val < 20) { type = 2; d1 = 20; d2 = 3; }
+            else if (val < 25) { type = 2; d1 = 20; d2 = 4; }
+            else if (val < 30) { type = 2; d1 = 20; d2 = 5; }
+            else if (val < 35) { type = 2; d1 = 20; d2 = 6; }
+            else if (val < 40) { type = 2; d1 = 20; d2 = 8; }
+            else if (val < 45) { type = 2; d1 = 20; d2 = 10; }
+            else if (val < 50) { type = 2; d1 = 23; d2 = 10; }
+            else if (val < 55) { type = 2; d1 = 23; d2 = 11; }
+            else if (val < 60) { type = 2; d1 = 25; d2 = 11; }
+            else if (val < 65) { type = 2; d1 = 25; d2 = 12; }
+            else if (val < 70) { type = 2; d1 = 27; d2 = 12; }
+            else if (val < 75) { type = 2; d1 = 27; d2 = 13; }
+            else if (val < 80) { type = 2; d1 = 30; d2 = 13; }
+            else if (val < 85) { type = 2; d1 = 30; d2 = 14; }
+            else if (val < 90) { type = 2; d1 = 33; d2 = 14; }
+            else if (val < 95) { type = 2; d1 = 33; d2 = 15; }
+            else if (val < 100) { type = 2; d1 = 35; d2 = 15; }
+            else { type = 2; d1 = 35; d2 = 16; }
+            
+            if (type === 0) return `1D${d1}`;
+            if (type === 1) return `1D${d1} + 1D${d2}`;
+            return `1D${d1} × (1 + 1D${d2})`;
+        }
+        
+        function updateAll() {
+            const getVal = (id) => parseInt(document.querySelector(`.sim-attr[data-attr="${id}"]`).value) || 0;
+            
+            const forca = getVal('forca');
+            const destreza = getVal('destreza');
+            const agilidade = getVal('agilidade');
+            const resistencia = getVal('resistencia');
+            const estamina = getVal('estamina');
+            const mira = getVal('mira');
+            const carisma = getVal('carisma');
+            const intuicao = getVal('intuicao');
+            
+            // Vida e Estamina
+            document.getElementById('out-hp').textContent = 50 + (resistencia * 10) + (forca * 2);
+            document.getElementById('out-est').textContent = estamina * 2;
+            
+            // Dados Escaláveis
+            document.getElementById('out-d-forca').textContent = getDadoEscalonado(forca);
+            document.getElementById('out-d-destreza').textContent = getDadoEscalonado(destreza);
+            document.getElementById('out-d-agilidade').textContent = getDadoEscalonado(agilidade);
+            document.getElementById('out-d-mira').textContent = getDadoEscalonado(mira);
+            document.getElementById('out-d-carisma').textContent = getDadoEscalonado(carisma);
+            
+            // Dados Flat / Especiais
+            document.getElementById('out-d-resistencia').textContent = `1D20 + ${resistencia}`;
+            document.getElementById('out-d-intuicao').textContent = `1D${10 + intuicao}`;
+            
+            // Dano Físico
+            let nivelFisico = Math.floor((forca * 2) + (destreza / 3));
+            if (nivelFisico < 0) nivelFisico = 0;
+            document.getElementById('out-d-fisico').textContent = getDadoEscalonado(nivelFisico);
+        }
+        
+        document.querySelectorAll('.sim-attr').forEach(el => el.addEventListener('input', updateAll));
+    </script>
 
 </body>
 </html>
