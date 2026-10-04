@@ -197,30 +197,32 @@
         
         <table>
             <tr>
-                <th>Nível do Atributo</th>
+                <th>Nível</th>
                 <th>Dado Rolado</th>
+                <th>Dano Min</th>
+                <th>Dano Max</th>
             </tr>
-            <tr><td>0 a 4</td><td>1D20</td></tr>
-            <tr><td>5 a 9</td><td>1D20 + 1D20</td></tr>
-            <tr><td>10 a 14</td><td>1D20 × (1 + 1D2)</td></tr>
-            <tr><td>15 a 19</td><td>1D20 × (1 + 1D3)</td></tr>
-            <tr><td>20 a 24</td><td>1D20 × (1 + 1D4)</td></tr>
-            <tr><td>25 a 29</td><td>1D20 × (1 + 1D5)</td></tr>
-            <tr><td>30 a 34</td><td>1D20 × (1 + 1D6)</td></tr>
-            <tr><td>35 a 39</td><td>1D20 × (1 + 1D8)</td></tr>
-            <tr><td>40 a 44</td><td>1D20 × (1 + 1D10)</td></tr>
-            <tr><td>45 a 49</td><td>1D23 × (1 + 1D10)</td></tr>
-            <tr><td>50 a 54</td><td>1D23 × (1 + 1D11)</td></tr>
-            <tr><td>55 a 59</td><td>1D25 × (1 + 1D11)</td></tr>
-            <tr><td>60 a 64</td><td>1D25 × (1 + 1D12)</td></tr>
-            <tr><td>65 a 69</td><td>1D27 × (1 + 1D12)</td></tr>
-            <tr><td>70 a 74</td><td>1D27 × (1 + 1D13)</td></tr>
-            <tr><td>75 a 79</td><td>1D30 × (1 + 1D13)</td></tr>
-            <tr><td>80 a 84</td><td>1D30 × (1 + 1D14)</td></tr>
-            <tr><td>85 a 89</td><td>1D33 × (1 + 1D14)</td></tr>
-            <tr><td>90 a 94</td><td>1D33 × (1 + 1D15)</td></tr>
-            <tr><td>95 a 99</td><td>1D35 × (1 + 1D15)</td></tr>
-            <tr><td>100+</td><td>1D35 × (1 + 1D16)</td></tr>
+            <tr><td>0 a 4</td><td>1D20</td><td>1</td><td>20</td></tr>
+            <tr><td>5 a 9</td><td>1D20 + 1D20</td><td>2</td><td>40</td></tr>
+            <tr><td>10 a 14</td><td>1D20 × (1 + 1D2) + 5</td><td>7</td><td>65</td></tr>
+            <tr><td>15 a 19</td><td>1D20 × (1 + 1D3) + 7</td><td>9</td><td>87</td></tr>
+            <tr><td>20 a 24</td><td>1D20 × (1 + 1D4) + 9</td><td>11</td><td>110</td></tr>
+            <tr><td>25 a 29</td><td>1D20 × (1 + 1D5) + 12</td><td>14</td><td>132</td></tr>
+            <tr><td>30 a 34</td><td>1D20 × (1 + 1D6) + 15</td><td>17</td><td>155</td></tr>
+            <tr><td>35 a 39</td><td>1D20 × (1 + 1D8) + 17</td><td>19</td><td>197</td></tr>
+            <tr><td>40 a 44</td><td>1D20 × (1 + 1D10) + 20</td><td>22</td><td>240</td></tr>
+            <tr><td>45 a 49</td><td>1D23 × (1 + 1D10) + 21</td><td>23</td><td>275</td></tr>
+            <tr><td>50 a 54</td><td>1D23 × (1 + 1D11) + 24</td><td>26</td><td>301</td></tr>
+            <tr><td>55 a 59</td><td>1D25 × (1 + 1D11) + 26</td><td>28</td><td>327</td></tr>
+            <tr><td>60 a 64</td><td>1D25 × (1 + 1D12) + 29</td><td>31</td><td>355</td></tr>
+            <tr><td>65 a 69</td><td>1D27 × (1 + 1D12) + 31</td><td>33</td><td>383</td></tr>
+            <tr><td>70 a 74</td><td>1D27 × (1 + 1D13) + 34</td><td>36</td><td>413</td></tr>
+            <tr><td>75 a 79</td><td>1D30 × (1 + 1D13) + 36</td><td>38</td><td>457</td></tr>
+            <tr><td>80 a 84</td><td>1D30 × (1 + 1D14) + 39</td><td>41</td><td>490</td></tr>
+            <tr><td>85 a 89</td><td>1D33 × (1 + 1D14) + 41</td><td>43</td><td>537</td></tr>
+            <tr><td>90 a 94</td><td>1D33 × (1 + 1D15) + 44</td><td>46</td><td>573</td></tr>
+            <tr><td>95 a 99</td><td>1D35 × (1 + 1D15) + 46</td><td>48</td><td>607</td></tr>
+            <tr><td>100+</td><td>1D35 × (1 + 1D16) + 49</td><td>51</td><td>645</td></tr>
         </table>
         
         <p><em>Para atributos como Resistência, o sistema padrão é <code>1D20 + Valor do Atributo</code>.</em></p>
@@ -372,32 +374,32 @@
         btnClose.addEventListener('click', () => { modal.style.display = 'none'; });
         
         function getDadoEscalonado(val) {
-            let d1 = 20, d2 = 0, type = 0;
-            if (val < 5) { type = 0; d1 = 20; }
-            else if (val < 10) { type = 1; d1 = 20; d2 = 20; }
-            else if (val < 15) { type = 2; d1 = 20; d2 = 2; }
-            else if (val < 20) { type = 2; d1 = 20; d2 = 3; }
-            else if (val < 25) { type = 2; d1 = 20; d2 = 4; }
-            else if (val < 30) { type = 2; d1 = 20; d2 = 5; }
-            else if (val < 35) { type = 2; d1 = 20; d2 = 6; }
-            else if (val < 40) { type = 2; d1 = 20; d2 = 8; }
-            else if (val < 45) { type = 2; d1 = 20; d2 = 10; }
-            else if (val < 50) { type = 2; d1 = 23; d2 = 10; }
-            else if (val < 55) { type = 2; d1 = 23; d2 = 11; }
-            else if (val < 60) { type = 2; d1 = 25; d2 = 11; }
-            else if (val < 65) { type = 2; d1 = 25; d2 = 12; }
-            else if (val < 70) { type = 2; d1 = 27; d2 = 12; }
-            else if (val < 75) { type = 2; d1 = 27; d2 = 13; }
-            else if (val < 80) { type = 2; d1 = 30; d2 = 13; }
-            else if (val < 85) { type = 2; d1 = 30; d2 = 14; }
-            else if (val < 90) { type = 2; d1 = 33; d2 = 14; }
-            else if (val < 95) { type = 2; d1 = 33; d2 = 15; }
-            else if (val < 100) { type = 2; d1 = 35; d2 = 15; }
-            else { type = 2; d1 = 35; d2 = 16; }
+            let d1 = 20, d2 = 0, type = 0, flat = 0;
+            if (val < 5) { type = 0; d1 = 20; flat = 0; }
+            else if (val < 10) { type = 1; d1 = 20; d2 = 20; flat = 0; }
+            else if (val < 15) { type = 2; d1 = 20; d2 = 2; flat = 5; }
+            else if (val < 20) { type = 2; d1 = 20; d2 = 3; flat = 7; }
+            else if (val < 25) { type = 2; d1 = 20; d2 = 4; flat = 9; }
+            else if (val < 30) { type = 2; d1 = 20; d2 = 5; flat = 12; }
+            else if (val < 35) { type = 2; d1 = 20; d2 = 6; flat = 15; }
+            else if (val < 40) { type = 2; d1 = 20; d2 = 8; flat = 17; }
+            else if (val < 45) { type = 2; d1 = 20; d2 = 10; flat = 20; }
+            else if (val < 50) { type = 2; d1 = 23; d2 = 10; flat = 21; }
+            else if (val < 55) { type = 2; d1 = 23; d2 = 11; flat = 24; }
+            else if (val < 60) { type = 2; d1 = 25; d2 = 11; flat = 26; }
+            else if (val < 65) { type = 2; d1 = 25; d2 = 12; flat = 29; }
+            else if (val < 70) { type = 2; d1 = 27; d2 = 12; flat = 31; }
+            else if (val < 75) { type = 2; d1 = 27; d2 = 13; flat = 34; }
+            else if (val < 80) { type = 2; d1 = 30; d2 = 13; flat = 36; }
+            else if (val < 85) { type = 2; d1 = 30; d2 = 14; flat = 39; }
+            else if (val < 90) { type = 2; d1 = 33; d2 = 14; flat = 41; }
+            else if (val < 95) { type = 2; d1 = 33; d2 = 15; flat = 44; }
+            else if (val < 100) { type = 2; d1 = 35; d2 = 15; flat = 46; }
+            else { type = 2; d1 = 35; d2 = 16; flat = 49; }
             
             if (type === 0) return `1D${d1}`;
             if (type === 1) return `1D${d1} + 1D${d2}`;
-            return `1D${d1} × (1 + 1D${d2})`;
+            return `1D${d1} × (1 + 1D${d2})${flat > 0 ? ' + ' + flat : ''}`;
         }
         
         function updateAll() {
