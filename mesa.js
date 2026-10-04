@@ -412,14 +412,23 @@ document.querySelectorAll('.btn-roll-attr').forEach(btn => {
         const attrValue = (myFicha.atributos && myFicha.atributos[attrName]) ? myFicha.atributos[attrName] : 0;
         const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || myFicha.nome || 'Jogador';
         
-        // Apenas Força, Destreza, Mira, Agilidade, Carisma e Intuição usam a nova tabela de escalonamento.
+                // Apenas Força, Destreza, Mira, Agilidade e Carisma usam a nova tabela de escalonamento.
         let rollData;
-        const validAttributes = ['forca', 'destreza', 'mira', 'agilidade', 'carisma', 'intuicao'];
+        const validAttributes = ['forca', 'destreza', 'mira', 'agilidade', 'carisma'];
         
         if (validAttributes.includes(attrName)) {
             rollData = calculateAttributeRoll(attrValue);
+        } else if (attrName === 'intuicao') {
+            const dadoMax = 10 + attrValue;
+            const dadoResult = Math.floor(Math.random() * dadoMax) + 1;
+            rollData = {
+                result: dadoResult,
+                expression: `[${dadoResult}]`,
+                desc: `1D${dadoMax} (10 + Atributo)`,
+                max: dadoMax
+            };
         } else {
-            // Resistência, Intuição e outros usam o padrão 1D20 + Atributo
+            // Resistência e outros usam o padrão 1D20 + Atributo
             const dadoResult = Math.floor(Math.random() * 20) + 1;
             rollData = {
                 result: dadoResult + attrValue,
