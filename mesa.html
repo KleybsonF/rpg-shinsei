@@ -98,6 +98,7 @@
         <!-- PAINEL DIREITO -->
         <div class="right-pane">
             <div class="top-actions">
+                <button id="btn-dados-simples" class="btn-top">🎲 Dados</button>
                 <button id="btn-spotify-toggle" class="btn-top">🎵 Spotify</button>
                 <a href="index.html" class="btn-top" style="text-decoration: none;">🗺️ Mapa</a>
                 <button id="btn-logout" class="btn-top" style="color: #ff3366; border: 1px solid #ff3366;">🚪 Sair</button>
@@ -156,5 +157,21 @@
         </div>
     </div>
 
+
+    <!-- Modal de Dados Simples -->
+    <div id="modal-dados-simples" class="modal hidden">
+        <div class="modal-content" style="max-width: 300px; text-align: center;">
+            <h2 style="color: #ff5e00; margin-bottom: 15px; font-family: 'Orbitron', sans-serif;">Rolagem Simples</h2>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="btn-primary btn-roll-simples" data-dice="10" style="padding: 15px;">Rolar 1D10</button>
+                <button class="btn-primary btn-roll-simples" data-dice="20" style="padding: 15px;">Rolar 1D20</button>
+                <button class="btn-primary btn-roll-simples" data-dice="100" style="padding: 15px;">Rolar 1D100</button>
+            </div>
+            <div style="margin-top: 20px;">
+                <button id="btn-close-dados-simples" class="btn-secondary" style="padding: 10px 30px; background: #333; color: white; border: 1px solid #555; border-radius: 5px; cursor: pointer; font-family: 'Orbitron', sans-serif;">Fechar</button>
+            </div>
+        </div>
+    </div>
+    
 </body>
 </html>

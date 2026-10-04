@@ -206,6 +206,11 @@ const modal = document.getElementById('player-modal');
                         Rolagem: ${data.expression}<br>
                         Resultado do Dano: <span class="log-result" style="color: #ff3366; font-size: 1.5rem;">${data.result}</span>
                     `;
+                } else if (data.tipo === 'simples') {
+                    div.innerHTML = `
+                        <span class="log-player">${data.playerName}</span> fez uma rolagem simples de <b>1D${data.diceMax}</b>:<br>
+                        Resultado: <span class="log-result" style="font-size: 1.5rem;">${data.result}</span>
+                    `;
                 } else if (data.tipo === 'status') {
                     const color = data.stat === 'vida' ? '#ff3366' : '#00ff88';
                     const icon = data.action === 'Adicionar' ? '+' : '-';
@@ -758,3 +763,46 @@ if (btnSpotifyToggle && modalSpotify) {
             window.location.href = 'login.html';
         });
     }
+
+
+    // Logica Modal de Dados Simples
+    const modalDados = document.getElementById('modal-dados-simples');
+    const btnOpenDados = document.getElementById('btn-dados-simples');
+    const btnCloseDados = document.getElementById('btn-close-dados-simples');
+
+    if(btnOpenDados) {
+        btnOpenDados.addEventListener('click', () => modalDados.classList.remove('hidden'));
+    }
+    if(btnCloseDados) {
+        btnCloseDados.addEventListener('click', () => modalDados.classList.add('hidden'));
+    }
+    if(modalDados) {
+        window.addEventListener('click', (e) => {
+            if (e.target === modalDados) modalDados.classList.add('hidden');
+        });
+    }
+
+    document.querySelectorAll('.btn-roll-simples').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+            const diceMax = parseInt(e.target.getAttribute('data-dice'));
+            const result = Math.floor(Math.random() * diceMax) + 1;
+            
+            const myFicha = fichas.find(f => f.id === loggedPlayerId);
+            const loggedPlayerName = sessionStorage.getItem('loggedPlayerName') || (myFicha ? myFicha.nome : 'Jogador');
+
+            try {
+                await addDoc(collection(db, "rolagens"), {
+                    playerId: loggedPlayerId,
+                    playerName: loggedPlayerName,
+                    tipo: 'simples',
+                    diceMax: diceMax,
+                    result: result,
+                    timestamp: Date.now()
+                });
+                modalDados.classList.add('hidden');
+            } catch (error) {
+                console.error("Erro ao rolar dado simples:", error);
+            }
+        });
+    });
+    
