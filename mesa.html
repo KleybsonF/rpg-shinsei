@@ -8,6 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&family=Rajdhani:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <!-- Background Effects -->
+    <div id="space">
+        <div id="stars"></div>
+        <div id="nebula"></div>
+    </div>
     <div class="mesa-wrapper">
         <!-- PAINEL ESQUERDO -->
         <div class="left-pane" id="left-pane">
@@ -27,8 +32,8 @@
                 
                 <div class="modal-body custom-scrollbar">
                     <div class="info-section" style="display: flex; gap: 10px; margin-bottom: 10px;">
-    <button id="btn-show-historia" class="btn-primary" style="flex: 1; font-size: 0.8rem; padding: 12px; background-color: rgba(0, 210, 255, 0.1); border: 1px solid var(--accent-blue); color: var(--text-main);">📖 LER HISTÓRIA</button>
-    <button id="btn-show-inventario" class="btn-primary" style="flex: 1; font-size: 0.8rem; padding: 12px; background-color: rgba(0, 210, 255, 0.1); border: 1px solid var(--accent-blue); color: var(--text-main);">🎒 VER INVENTÁRIO</button>
+    <button id="btn-show-historia" class="btn-primary" style="flex: 1; font-size: 0.8rem; padding: 12px; background-color: rgba(255, 94, 0, 0.1); border: 1px solid #ff5e00; color: var(--text-main);">📖 LER HISTÓRIA</button>
+    <button id="btn-show-inventario" class="btn-primary" style="flex: 1; font-size: 0.8rem; padding: 12px; background-color: rgba(255, 94, 0, 0.1); border: 1px solid #ff5e00; color: var(--text-main);">🎒 VER INVENTÁRIO</button>
 </div>
                     
                     <div class="status-grid-container">
@@ -113,8 +118,8 @@
     <!-- Modal de Update de Status (Mantido Oculto) -->
     <div id="modal-status-update" class="modal hidden">
         <div class="modal-content" style="max-width: 300px; text-align: center;">
-            <h2 id="modal-status-title" style="color: #00d2ff; margin-bottom: 15px;">Atualizar</h2>
-            <input type="number" id="modal-status-input" style="width: 100%; padding: 10px; margin-bottom: 20px; text-align: center; font-size: 1.2rem; background: rgba(0,0,0,0.5); color: white; border: 1px solid #00d2ff; border-radius: 5px;" min="1">
+            <h2 id="modal-status-title" style="color: #ff5e00; margin-bottom: 15px;">Atualizar</h2>
+            <input type="number" id="modal-status-input" style="width: 100%; padding: 10px; margin-bottom: 20px; text-align: center; font-size: 1.2rem; background: rgba(0,0,0,0.5); color: white; border: 1px solid #ff5e00; border-radius: 5px;" min="1">
             <div style="display: flex; gap: 10px; justify-content: center;">
                 <button id="btn-status-confirm" class="btn-primary" style="flex: 1;">Confirmar</button>
                 <button id="btn-status-cancel" class="btn-secondary" style="flex: 1; background: #333; border: 1px solid var(--border-color); color: white; cursor: pointer; border-radius: 5px; font-family: 'Orbitron', sans-serif;">Cancelar</button>
