@@ -285,11 +285,11 @@ document.querySelectorAll('.btn-add, .btn-sub').forEach(btn => {
         let atual = currentStats[`${statName}Atual`] || 0;
         const max = currentStats[`${statName}Max`] || 0;
         
-        let amount = window.prompt(`Quantos pontos de ${statName === 'vida' ? 'Vida' : 'Estamina'} deseja ${isAdd ? 'adicionar' : 'remover'}?`);
-        if (!amount) return;
-        amount = parseInt(amount);
-        if (isNaN(amount) || amount <= 0) {
-            alert('Valor inválido!');
+        const actionStr = isAdd ? 'Adicionar' : 'Remover';
+        const labelStr = statName === 'vida' ? 'Vida' : 'Estamina';
+        let amount = await openStatusModal(`${actionStr} ${labelStr}`);
+        
+        if (!amount || isNaN(amount) || amount <= 0) {
             return;
         }
         
@@ -309,6 +309,44 @@ document.querySelectorAll('.btn-add, .btn-sub').forEach(btn => {
         }
     });
 });
+
+function openStatusModal(title) {
+    return new Promise((resolve) => {
+        const modalUpdate = document.getElementById('modal-status-update');
+        document.getElementById('modal-status-title').textContent = title;
+        const input = document.getElementById('modal-status-input');
+        input.value = '';
+        modalUpdate.classList.remove('hidden');
+        input.focus();
+
+        const btnConfirm = document.getElementById('btn-status-confirm');
+        const btnCancel = document.getElementById('btn-status-cancel');
+
+        const handleConfirm = () => {
+            const val = parseInt(input.value);
+            cleanup();
+            resolve(val);
+        };
+        const handleCancel = () => {
+            cleanup();
+            resolve(null);
+        };
+        const handleEnter = (e) => {
+            if (e.key === 'Enter') handleConfirm();
+        }
+
+        btnConfirm.addEventListener('click', handleConfirm);
+        btnCancel.addEventListener('click', handleCancel);
+        input.addEventListener('keypress', handleEnter);
+
+        function cleanup() {
+            btnConfirm.removeEventListener('click', handleConfirm);
+            btnCancel.removeEventListener('click', handleCancel);
+            input.removeEventListener('keypress', handleEnter);
+            modalUpdate.classList.add('hidden');
+        }
+    });
+}
 
 // Helpers para rolagens de atributo
 function calculateAttributeRoll(attrValue) {

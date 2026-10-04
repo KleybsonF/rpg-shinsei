@@ -116,6 +116,18 @@
         </div>
     </div>
 
+    <!-- Modal de Update de Status -->
+    <div id="modal-status-update" class="modal hidden">
+        <div class="modal-content" style="max-width: 300px; text-align: center;">
+            <h2 id="modal-status-title" style="color: #00d2ff; margin-bottom: 15px;">Atualizar</h2>
+            <input type="number" id="modal-status-input" style="width: 100%; padding: 10px; margin-bottom: 20px; text-align: center; font-size: 1.2rem; background: rgba(0,0,0,0.5); color: white; border: 1px solid #00d2ff; border-radius: 5px;" min="1">
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="btn-status-confirm" class="btn-primary" style="flex: 1;">Confirmar</button>
+                <button id="btn-status-cancel" class="btn-secondary" style="flex: 1; background: #333; border: 1px solid var(--border-color); color: white; cursor: pointer; border-radius: 5px; font-family: 'Orbitron', sans-serif;">Cancelar</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="mesa.js"></script>
 </body>
 </html>
