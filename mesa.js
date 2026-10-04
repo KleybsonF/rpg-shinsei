@@ -464,6 +464,19 @@ if (btnDanoFisico) {
     });
 }
 
+const weaponDamageTable = {
+    1: 20,
+    2: 35,
+    3: 50,
+    4: 70,
+    5: 90,
+    6: 115,
+    7: 140,
+    8: 170,
+    9: 205,
+    10: 245
+};
+
 const btnDanoMira = document.getElementById('btn-dano-mira');
 if (btnDanoMira) {
     btnDanoMira.addEventListener('click', async () => {
