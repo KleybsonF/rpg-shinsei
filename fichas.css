@@ -1,18 +1,18 @@
 :root {
-    --bg-dark: #0a0a0f;
-    --bg-panel: #151520;
-    --bg-panel-hover: #1e1e2d;
+    --bg-dark: #121212;
+    --bg-panel: #1c1c1c;
+    --bg-panel-hover: #262626;
     --text-main: #e0e0e0;
-    --text-muted: #8b8b99;
-    --accent-blue: #00d2ff;
-    --accent-blue-hover: #00a8cc;
-    --accent-green: #00ff88;
-    --accent-green-hover: #00cc6a;
-    --accent-red: #ff3366;
-    --accent-red-hover: #cc2952;
-    --border-color: #2a2a3a;
+    --text-muted: #9e9e9e;
+    --accent-blue: #b32d2d;
+    --accent-blue-hover: #8f2323;
+    --accent-green: #b32d2d;
+    --accent-green-hover: #8f2323;
+    --accent-red: #8b0000;
+    --accent-red-hover: #660000;
+    --border-color: #333333;
     
-    --font-heading: 'Orbitron', sans-serif;
+    --font-heading: 'Rajdhani', sans-serif;
     --font-body: 'Rajdhani', sans-serif;
 }
 
@@ -80,7 +80,7 @@ body {
 }
 
 .ficha-item.active {
-    background-color: rgba(0, 210, 255, 0.1);
+    background-color: rgba(179, 45, 45, 0.1);
     border-left: 4px solid var(--accent-blue);
 }
 
@@ -183,7 +183,7 @@ input[type="text"], input[type="password"], textarea, input[type="number"] {
 input[type="text"]:focus, input[type="password"]:focus, textarea:focus, input[type="number"]:focus {
     outline: none;
     border-color: var(--accent-blue);
-    box-shadow: 0 0 10px rgba(0, 210, 255, 0.2);
+    box-shadow: 0 0 5px rgba(179, 45, 45, 0.3);
 }
 
 textarea {
@@ -323,7 +323,7 @@ button {
 
 .btn-primary:hover {
     background-color: var(--accent-blue-hover);
-    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4);
+    box-shadow: 0 0 10px rgba(179, 45, 45, 0.4);
 }
 
 .btn-success {
@@ -333,7 +333,7 @@ button {
 
 .btn-success:hover {
     background-color: var(--accent-green-hover);
-    box-shadow: 0 0 15px rgba(0, 255, 136, 0.4);
+    box-shadow: 0 0 10px rgba(179, 45, 45, 0.4);
 }
 
 .btn-danger {
@@ -345,7 +345,7 @@ button {
 .btn-danger:hover {
     background-color: var(--accent-red);
     color: #fff;
-    box-shadow: 0 0 15px rgba(255, 51, 102, 0.4);
+    box-shadow: 0 0 10px rgba(139, 0, 0, 0.4);
 }
 
 /* Scrollbar Customization */
