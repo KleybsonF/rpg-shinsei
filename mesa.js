@@ -285,10 +285,18 @@ document.querySelectorAll('.btn-add, .btn-sub').forEach(btn => {
         let atual = currentStats[`${statName}Atual`] || 0;
         const max = currentStats[`${statName}Max`] || 0;
         
+        let amount = window.prompt(`Quantos pontos de ${statName === 'vida' ? 'Vida' : 'Estamina'} deseja ${isAdd ? 'adicionar' : 'remover'}?`);
+        if (!amount) return;
+        amount = parseInt(amount);
+        if (isNaN(amount) || amount <= 0) {
+            alert('Valor inválido!');
+            return;
+        }
+        
         if (isAdd) {
-            atual = Math.min(max, atual + 1);
+            atual = Math.min(max, atual + amount);
         } else {
-            atual = Math.max(0, atual - 1);
+            atual = Math.max(0, atual - amount);
         }
         
         try {
