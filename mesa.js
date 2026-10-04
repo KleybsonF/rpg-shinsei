@@ -679,3 +679,39 @@ if (btnSpotifyToggle && modalSpotify) {
             modalText.classList.add('hidden');
         }
     });
+
+
+    // Logica do Resizer (Arrastar Painel)
+    const resizer = document.getElementById('dragMe');
+    const leftPane = document.getElementById('left-pane');
+    let isDragging = false;
+
+    if (resizer && leftPane) {
+        resizer.addEventListener('mousedown', function(e) {
+            isDragging = true;
+            resizer.classList.add('dragging');
+            document.body.style.cursor = 'col-resize';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', function(e) {
+            if (!isDragging) return;
+            
+            let newWidth = e.clientX;
+            
+            if (newWidth < 300) newWidth = 300;
+            if (newWidth > window.innerWidth * 0.7) newWidth = window.innerWidth * 0.7;
+            
+            leftPane.style.width = newWidth + 'px';
+            leftPane.style.minWidth = newWidth + 'px';
+            leftPane.style.maxWidth = newWidth + 'px';
+        });
+
+        document.addEventListener('mouseup', function(e) {
+            if (isDragging) {
+                isDragging = false;
+                resizer.classList.remove('dragging');
+                document.body.style.cursor = '';
+            }
+        });
+    }
