@@ -354,7 +354,7 @@ function calculateAttributeRoll(attrValue) {
     // O usuário disse apenas: "A cada 5 niveis eles devem ter um upgrade nos seus dados seguindo essa tabela"
     // Vou assumir que o resultado final é apenas a rolagem estipulada pela tabela.
 
-    return { result, expression, desc, max };
+    return { result, expression, desc, max, roll1 };
 }
 
 // Roll Attribute Buttons
@@ -430,7 +430,8 @@ if (btnDanoFisico) {
         let nivel = Math.floor((forca * 2) + (destreza / 3));
         if (nivel < 0) nivel = 0;
         
-        let acerto = Math.floor(Math.random() * 20) + 1;
+        let rollData = calculateAttributeRoll(nivel);
+        let acerto = rollData.roll1;
         let multiplicador = 1;
         let acertoType = 'normal';
         
@@ -445,7 +446,6 @@ if (btnDanoFisico) {
             acertoType = 'crit';
         }
 
-        let rollData = calculateAttributeRoll(nivel);
         rollData.result = Math.floor(rollData.result * multiplicador);
         if (multiplicador !== 1) {
             rollData.expression = `(${rollData.expression}) × ${multiplicador}`;
