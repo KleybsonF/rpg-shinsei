@@ -440,7 +440,7 @@ if (btnDanoFisico) {
         } else if (acerto <= 10) {
             multiplicador = 0.5;
             acertoType = 'half';
-        } else if (acerto >= 19) {
+        } else if (acerto === 20) {
             multiplicador = 2;
             acertoType = 'crit';
         }
